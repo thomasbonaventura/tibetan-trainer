@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Tibetan Trainer</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#2b3a55">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="app">
+
+  <header id="top-bar">
+    <button id="filter-btn" class="icon-btn" aria-label="Filters">☰</button>
+    <h1 id="mode-title">Tibetan Trainer</h1>
+    <span id="due-count" class="due-count"></span>
+  </header>
+
+  <main id="drill-area">
+    <div id="loading">Loading vocabulary…</div>
+  </main>
+
+  <nav id="tab-bar">
+    <button class="tab" data-mode="discrimination">
+      <span class="tab-icon">⚡</span><span class="tab-label">Discriminate</span>
+    </button>
+    <button class="tab" data-mode="cloze">
+      <span class="tab-icon">▭</span><span class="tab-label">Cloze</span>
+    </button>
+    <button class="tab" data-mode="recall">
+      <span class="tab-icon">↺</span><span class="tab-label">Recall</span>
+    </button>
+  </nav>
+
+  <div id="filter-sheet" class="sheet hidden">
+    <div class="sheet-header">
+      <h2>Filters</h2>
+      <button id="filter-close" class="icon-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="sheet-body" id="filter-body"></div>
+  </div>
+
+  <div id="sheet-backdrop" class="backdrop hidden"></div>
+
+</div>
+
+<script type="module" src="js/main.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js');
+  });
+}
+</script>
+</body>
+</html>
