@@ -1,7 +1,7 @@
 # tibetan_trainer_data.json — data contract
 
 Personal Tibetan vocabulary, exported from a hand-built dictionary.
-**463 entries · 21 false-friend groups · 347 cloze cards.** UTF-8, ~1 MB.
+**484 entries · 34 false-friend groups · 347 cloze cards.** UTF-8, ~1.1 MB.
 
 This file is the *only* thing the app should read. Do not parse the spreadsheet.
 Re-exporting produces the same shape with more entries.
@@ -20,9 +20,9 @@ it, so re-importing a newer export adds words without losing history.
 
 | key | what |
 |---|---|
-| `meta` | counts, generation date, source list |
-| `entries` | 463 vocabulary entries |
-| `falseFriendGroups` | 21 sets of confusable words |
+| `meta` | counts, sources, romanization convention, **`cardGuidance`** |
+| `entries` | 484 vocabulary entries |
+| `falseFriendGroups` | 34 sets of confusable words |
 | `clozeCards` | 347 pre-built fill-in-the-blank cards |
 
 ## entry
@@ -41,12 +41,13 @@ it, so re-importing a newer export adds words without losing history.
   "notes": "Frequently plural in sense even without a plural marker…",
   "related":      [ {"tibetan":"སེམས་","english":"mind"}, … ],
   "falseFriends": [ {"tibetan":"…","english":"…"}, … ],   // [] if none
-  "falseFriendGroup": null,         // or a groupId
+  "falseFriendGroup": null,          // or a groupId
   "sourceCode": "TIB1",
   "sources": ["Tibetan I – Grammar Slides", …],
   "lesson": "Slide 1 (basic vocab); 4; 21",
-  "dateLearned": "2025-10-01",      // null only for contrast entries
-  "pronunciationVerified": true,    // false on 164 entries — see below
+  "dateLearned": "2025-10-01",       // null only for contrast entries
+  "pronunciationVerified": true,     // false on 178 entries — see below
+  "pronunciationProvenance": "from slides",   // or "from source" / "derived – reviewed"
   "example": {
     "tibetan": "སེམས་ཅན་རྣམས་འཁོར་བ་ལ་ཡོད།",
     "english": "Sentient beings dwell in samsara",
@@ -65,22 +66,44 @@ separator is part of each token. To render a cloze, replace
 ```jsonc
 {
   "groupId": 2,
-  "members": ["NEC-017","SYL-001"],      // ཅན་ and ཆེན་
+  "members": ["NEC-017","SYL-001"],          // ཅན་ and ཆེན་
+  "romanizations": ["CHEN","CHEN"],
   "romanizationsIdentical": true,
-  "note": "All members share the romanization CHEN — the app must NOT show the
-           pronunciation on these cards, or the answer is given away."
+  "hideRomanizationOnPrompt": false,
+  "note": "All members are romanized CHEN. Showing the pronunciation is harmless
+           here — it cannot disambiguate — and is worth showing, because it
+           demonstrates that pronunciation will not save you."
 }
 ```
 
 Groups are **connected components**, so a word listed against two different
-partners lands in one group with all of them: ལས་ / ལམ་ / ནས་ is a single
-3-member set, and the བྱེད་ verb family is one 6-member set.
+partners lands in one group with all of them.
 
-Group sizes: 2 members ×8, 3 ×7, 4 ×2, 5 ×1, 6 ×1.
+Sizes: 2 members ×21, 3 ×9, 4 ×1, 5 ×1, 6 ×1, **12 ×1**. The twelve-member group
+merges the "all" words with the plural markers — cap distractors at three or four
+when drilling it, or it becomes a lottery.
 
-**Three groups have identical romanization across all members** — `ཅན་/ཆེན་`
-(CHEN), `བོས་/བོད་` (BÖ), `དང་/སྡང་` (DANG). These are the hardest and most
-valuable cards. Honour `romanizationsIdentical`.
+### Showing the romanization — read this carefully
+
+The leak runs the **opposite way** from the obvious guess.
+
+- **Risk exists when members DIFFER** in romanization (ལས་ LE / ལམ་ LAM / ནས་ NE).
+  The learner can answer from the romanization without ever reading the script,
+  which defeats the whole point of the drill. → `hideRomanizationOnPrompt: true`
+- **No risk when all members SHARE one romanization** (ཅན་/ཆེན་ both CHEN). It
+  cannot disambiguate, and showing it teaches the real lesson: pronunciation
+  will not help, read the script. → `hideRomanizationOnPrompt: false`
+
+Honour `hideRomanizationOnPrompt`, not `romanizationsIdentical`.
+30 of the 34 groups hide it on the prompt; 4 do not.
+
+**Always show the romanization on the answer side, in every card type.** Once the
+answer is revealed there is no test left to protect, and the pronunciation is
+part of what is being learned. See `meta.cardGuidance`.
+
+Four groups share one romanization across all members: `ཅན་/ཆེན་` (CHEN),
+`བོས་/བོད་` (BÖ), `གོང་/དགོངས་` (GONG), `དང་/སྡང་` (DANG). These are the hardest
+and most valuable cards.
 
 ## clozeCards
 
@@ -93,12 +116,14 @@ intentional, but dedupe by `tibetan` if a session feels repetitive.
 
 ## Things that will bite you
 
-1. **164 entries have `pronunciationVerified: false`.** Those romanizations are
-   unconfirmed guesses. The app must be able to exclude them; never quiz the
-   romanization of one.
-2. **Romanization cannot disambiguate.** It is a reading aid, not phonetics —
-   no tone, no vowel length, and inconsistent between sources (`DÜN DU` vs
-   `gey-wa`). Never use it as the answer key for a discrimination card.
+1. **178 entries have `pronunciationVerified: false`** — supplied by me and checked
+   for rule-consistency, but not confirmed by a teacher
+   (`pronunciationProvenance: "derived – reviewed"`). The app should be able to
+   exclude them.
+2. **Romanization cannot disambiguate.** It is a reading aid, not phonetics — no
+   tone, no vowel length. The column follows one convention throughout (Tergar
+   liturgy: ཟ→Z, ཞ→ZH, བྱ→J), recorded in `meta.romanizationConvention`. Never
+   use it as the answer key on a discrimination card — but do show it on reveal.
 3. **Tibetan needs real rendering.** Stacked forms like སྙིང་རྗེ་, སྟོང་པ་ཉིད་,
    བསྒྲུབས་ break under fonts with poor coverage. iOS ships *Kailasa*; verify
    visually on a real iPhone, not just a desktop browser.
@@ -107,5 +132,5 @@ intentional, but dedupe by `tibetan` if a session feels repetitive.
 5. **Some entries aren't vocabulary.** ~40 are particles or grammatical terms
    (ལ་དོན་, རྫོགས་ཚིག་). They make poor recall cards; filter by `category` if a
    drill feels wrong.
-6. **`dateLearned` is null** on contrast entries (`SYL-`, plus a few added for
-   comparison) — they were never taught on a date.
+6. **`dateLearned` is null** on contrast entries (`SYL-`) — they were added to
+   sharpen a distinction, never taught on a date.
