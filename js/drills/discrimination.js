@@ -1,9 +1,33 @@
 import { shuffle, pickNext, dueCount } from '../queue.js';
 
 const DRILL_TYPE = 'discrimination';
+const MAX_OPTIONS = 4;
 
 function activeGroupMembers(group, data, activeSet) {
   return group.members.filter(id => activeSet.has(id));
+}
+
+// Large groups (e.g. the 12-member "all"/plural-marker set) would turn the
+// drill into a lottery if every member were offered as an option, so cap it:
+// the correct entry plus up to MAX_OPTIONS-1 random distractors.
+function pickOptionMembers(members, correctId) {
+  if (members.length <= MAX_OPTIONS) return shuffle(members);
+  const correct = members.find(m => m.id === correctId);
+  const distractors = shuffle(members.filter(m => m.id !== correctId)).slice(0, MAX_OPTIONS - 1);
+  return shuffle([correct, ...distractors]);
+}
+
+function romanizationLine(entry) {
+  if (entry.pronunciationVerified) {
+    const r = document.createElement('div');
+    r.className = 'romanization';
+    r.textContent = entry.romanization;
+    return r;
+  }
+  const flag = document.createElement('div');
+  flag.className = 'unverified-flag';
+  flag.textContent = 'pronunciation unverified';
+  return flag;
 }
 
 function candidateIds(data, activeSet) {
@@ -51,25 +75,15 @@ export function createDiscriminationDrill(ctx) {
     const card = document.createElement('div');
     card.className = 'card';
 
+    const romanizationShownInPrompt = direction === 'ti-en' && !group.hideRomanizationOnPrompt;
+
     if (direction === 'ti-en') {
       const t = document.createElement('div');
       t.className = 'tibetan';
       t.textContent = entry.tibetan;
       card.appendChild(t);
 
-      if (!group.romanizationsIdentical) {
-        if (entry.pronunciationVerified) {
-          const r = document.createElement('div');
-          r.className = 'romanization';
-          r.textContent = entry.romanization;
-          card.appendChild(r);
-        } else {
-          const flag = document.createElement('div');
-          flag.className = 'unverified-flag';
-          flag.textContent = 'pronunciation unverified';
-          card.appendChild(flag);
-        }
-      }
+      if (romanizationShownInPrompt) card.appendChild(romanizationLine(entry));
     } else {
       const p = document.createElement('div');
       p.className = 'english-prompt';
@@ -89,7 +103,7 @@ export function createDiscriminationDrill(ctx) {
     const optionsEl = document.createElement('div');
     optionsEl.className = 'options';
 
-    const options = shuffle(members).map(m => ({
+    const options = pickOptionMembers(members, entry.id).map(m => ({
       entry: m,
       label: direction === 'ti-en' ? m.english : m.tibetan,
       correct: m.id === entry.id,
@@ -119,6 +133,7 @@ export function createDiscriminationDrill(ctx) {
     container.appendChild(optionsEl);
 
     function showFooter() {
+      if (!romanizationShownInPrompt) card.appendChild(romanizationLine(entry));
       if (group.note) {
         const note = document.createElement('div');
         note.className = 'empty-state';

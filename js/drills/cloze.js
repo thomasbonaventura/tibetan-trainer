@@ -101,6 +101,13 @@ export function createClozeDrill(ctx) {
       englishEl.textContent = card.english;
       sentenceCard.appendChild(englishEl);
 
+      if (entry.pronunciationVerified) {
+        const romEl = document.createElement('div');
+        romEl.className = 'romanization';
+        romEl.textContent = entry.romanization;
+        sentenceCard.appendChild(romEl);
+      }
+
       if (givenText !== undefined && givenText !== answer) {
         const gaveEl = document.createElement('div');
         gaveEl.className = 'unverified-flag';
