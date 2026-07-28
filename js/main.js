@@ -4,6 +4,7 @@ import { defaultFilters, reconcileFilters, activeEntrySet } from './filters.js';
 import { createDiscriminationDrill } from './drills/discrimination.js';
 import { createClozeDrill } from './drills/cloze.js';
 import { createRecallDrill } from './drills/recall.js';
+import { createLookupView } from './lookup.js';
 
 const drillArea = document.getElementById('drill-area');
 const modeTitle = document.getElementById('mode-title');
@@ -19,6 +20,7 @@ const MODE_TITLES = {
   discrimination: 'Discriminate',
   cloze: 'Cloze',
   recall: 'Recall',
+  lookup: 'Look up',
 };
 
 async function main() {
@@ -46,6 +48,7 @@ async function main() {
     discrimination: createDiscriminationDrill(ctx),
     cloze: createClozeDrill(ctx),
     recall: createRecallDrill(ctx),
+    lookup: createLookupView(ctx),
   };
 
   let currentMode = 'discrimination';

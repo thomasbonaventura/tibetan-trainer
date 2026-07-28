@@ -1,4 +1,5 @@
 import { shuffle, pickNext, dueCount } from '../queue.js';
+import { romanizationLine } from '../entry-view.js';
 
 const DRILL_TYPE = 'discrimination';
 const MAX_OPTIONS = 4;
@@ -15,19 +16,6 @@ function pickOptionMembers(members, correctId) {
   const correct = members.find(m => m.id === correctId);
   const distractors = shuffle(members.filter(m => m.id !== correctId)).slice(0, MAX_OPTIONS - 1);
   return shuffle([correct, ...distractors]);
-}
-
-function romanizationLine(entry) {
-  if (entry.pronunciationVerified) {
-    const r = document.createElement('div');
-    r.className = 'romanization';
-    r.textContent = entry.romanization;
-    return r;
-  }
-  const flag = document.createElement('div');
-  flag.className = 'unverified-flag';
-  flag.textContent = 'pronunciation unverified';
-  return flag;
 }
 
 function candidateIds(data, activeSet) {
