@@ -105,17 +105,21 @@ function scoreLatin(rec, tight, loose) {
 }
 
 /**
+ * @param {object} [opts]
+ * @param {(entry: object) => boolean} [opts.filter]  narrows the searched set,
+ *   applied before the result cap so `total` reflects the scope
  * @returns {{ tooShort: boolean, hits: Array<{entry, score}>, total: number }}
  *   `hits` is capped at `limit`; `total` is how many matched before capping.
  */
-export function searchEntries(index, query, limit = 50) {
+export function searchEntries(index, query, limit = 50, opts = {}) {
   const raw = (query || '').trim();
   const tibetanQuery = isTibetan(raw);
+  const records = opts.filter ? index.records.filter(r => opts.filter(r.entry)) : index.records;
 
   if (tibetanQuery) {
     const q = foldTibetan(raw);
     if (q.length < MIN_TIBETAN) return { tooShort: true, hits: [], total: 0 };
-    return rank(index.records, rec => scoreTibetan(rec, q), limit);
+    return rank(records, rec => scoreTibetan(rec, q), limit);
   }
 
   const tight = foldTight(raw);
@@ -126,10 +130,10 @@ export function searchEntries(index, query, limit = 50) {
     // Two entries are romanized as a single letter (Ö, Ü) and would otherwise
     // be unreachable by their own pronunciation. Let an exact match through,
     // but nothing weaker, so a stray "a" still doesn't list half the deck.
-    const exact = rank(index.records, rec => scoreLatin(rec, tight, loose) === EXACT ? EXACT : 0, limit);
+    const exact = rank(records, rec => scoreLatin(rec, tight, loose) === EXACT ? EXACT : 0, limit);
     return exact.total > 0 ? exact : { tooShort: true, hits: [], total: 0 };
   }
-  return rank(index.records, rec => scoreLatin(rec, tight, loose), limit);
+  return rank(records, rec => scoreLatin(rec, tight, loose), limit);
 }
 
 function rank(records, scoreOf, limit) {

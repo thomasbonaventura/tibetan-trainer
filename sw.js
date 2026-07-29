@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'tibtrainer-shell-v5';
+const SHELL_CACHE = 'tibtrainer-shell-v6';
 const DATA_CACHE = 'tibtrainer-data-v1';
 
 const SHELL_FILES = [
@@ -10,6 +10,7 @@ const SHELL_FILES = [
   './js/storage.js',
   './js/filters.js',
   './js/queue.js',
+  './js/session.js',
   './js/search.js',
   './js/entry-view.js',
   './js/lookup.js',

@@ -3,38 +3,19 @@
 
 import { foldTibetan, tibetanHead } from './search.js';
 
-// Drill-side: show the romanization, or an "unverified" chip in its place.
+// Every one of the 484 entries carries a romanization, so this always has
+// something to show. The 178 entries with pronunciationVerified: false are not
+// missing data — they are romanized but not teacher-countersigned, and that
+// distinction is a sourcing note rather than something to surface mid-drill.
 export function romanizationLine(entry) {
-  if (entry.pronunciationVerified) {
-    const r = document.createElement('div');
-    r.className = 'romanization';
-    r.textContent = entry.romanization;
-    return r;
-  }
-  const flag = document.createElement('div');
-  flag.className = 'unverified-flag';
-  flag.textContent = 'pronunciation unverified';
-  return flag;
+  const r = document.createElement('div');
+  r.className = 'romanization';
+  r.textContent = entry.romanization;
+  return r;
 }
 
-// Dictionary-side: always show the romanization, and flag it when unverified.
-// A lookup is an answer-side context — there is no test left to protect, and
-// the pronunciation is part of what is being learned (see README_DATA.md).
 export function romanizationDetail(entry) {
-  const wrap = document.createDocumentFragment();
-  if (entry.romanization) {
-    const r = document.createElement('div');
-    r.className = 'romanization';
-    r.textContent = entry.romanization;
-    wrap.appendChild(r);
-  }
-  if (!entry.pronunciationVerified) {
-    const flag = document.createElement('div');
-    flag.className = 'unverified-flag';
-    flag.textContent = 'pronunciation unverified';
-    wrap.appendChild(flag);
-  }
-  return wrap;
+  return romanizationLine(entry);
 }
 
 function section(label) {

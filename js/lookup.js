@@ -7,16 +7,37 @@ import { renderEntryDetail } from './entry-view.js';
 
 const RESULT_LIMIT = 50;
 
+// Source names are full titles ("Kagyü Ngöndro 1 – Four Thoughts") and too wide
+// for a chip on a phone. Anything not listed falls back to the text before the
+// first dash or bracket, so a newly added source still gets a sane label.
+const SHORT_LABELS = {
+  TIB1: 'Tibetan I',
+  REF: 'Refuge',
+  NEC: 'Nectar',
+  NGO1: 'Ngöndro 1',
+  NGO2: 'Ngöndro 2',
+  NGO3: 'Ngöndro 3',
+  SYL: 'Contrasts',
+};
+
+function shortLabel(code, fullName) {
+  if (SHORT_LABELS[code]) return SHORT_LABELS[code];
+  return (fullName || code).split(/\s[–\-(]/)[0].trim();
+}
+
 export function createLookupView(ctx) {
   let index = null;
   let query = '';
   let expandedId = null;
   let autoExpandSingle = false;
+  // 'all', or a sourceCode. Persisted so the scope survives a reload.
+  let scope = ctx.settings.lookupScope || 'all';
 
   // Rebuilt by render(); held here so the input handler can reach them without
   // re-querying the DOM.
   let inputEl = null;
   let resultsEl = null;
+  let scopeRowEl = null;
   // The one expanded entry: { id, row, detail }, or null.
   let openRefs = null;
 
@@ -51,10 +72,13 @@ export function createLookupView(ctx) {
     clearBtn.textContent = '✕';
     row.appendChild(clearBtn);
 
+    scopeRowEl = buildScopeRow();
+
     resultsEl = document.createElement('div');
     resultsEl.className = 'results';
 
-    container.append(row, resultsEl);
+    container.append(row, scopeRowEl, resultsEl);
+    scopeRowEl.scrollToActive();
 
     // Only the results are rebuilt per keystroke. Re-creating the input — what
     // every drill does on re-render — would drop focus and dismiss the iOS
@@ -91,6 +115,16 @@ export function createLookupView(ctx) {
     inputEl.value = tibetan;
     expandedId = null;
     autoExpandSingle = true;
+    // A chip is an explicit "show me this word", so honouring a source scope
+    // that happens to hide it would just look broken. Widen back to All.
+    if (scope !== 'all') {
+      scope = 'all';
+      ctx.settings.lookupScope = 'all';
+      ctx.persistSettings();
+      const fresh = buildScopeRow();
+      scopeRowEl.replaceWith(fresh);
+      scopeRowEl = fresh;
+    }
     renderResults();
     ctx.container.scrollTop = 0;
   }
@@ -107,7 +141,7 @@ export function createLookupView(ctx) {
       return;
     }
 
-    const { tooShort, hits, total } = searchEntries(index, query, RESULT_LIMIT);
+    const { tooShort, hits, total } = searchEntries(index, query, RESULT_LIMIT, { filter: scopeFilter() });
 
     if (tooShort) {
       resultsEl.appendChild(hint('Keep typing…'));
@@ -116,8 +150,26 @@ export function createLookupView(ctx) {
     if (hits.length === 0) {
       const none = document.createElement('div');
       none.className = 'empty-state';
-      none.textContent = 'No matches for “' + query.trim() + '”.';
+      none.textContent = scope === 'all'
+        ? 'No matches for “' + query.trim() + '”.'
+        : 'No matches for “' + query.trim() + '” in ' + shortLabel(scope, ctx.data.sourceNames[scope]) + '.';
       resultsEl.appendChild(none);
+      // Offer the wider search rather than leaving a dead end.
+      if (scope !== 'all') {
+        const widen = document.createElement('button');
+        widen.className = 'big-btn neutral';
+        widen.textContent = 'Search all sources';
+        widen.addEventListener('click', () => {
+          scope = 'all';
+          ctx.settings.lookupScope = 'all';
+          ctx.persistSettings();
+          const fresh = buildScopeRow();
+          scopeRowEl.replaceWith(fresh);
+          scopeRowEl = fresh;
+          renderResults();
+        });
+        resultsEl.appendChild(widen);
+      }
       return;
     }
 
@@ -138,6 +190,66 @@ export function createLookupView(ctx) {
     el.className = 'empty-state';
     el.textContent = text;
     return el;
+  }
+
+  // Restrict the dictionary to one source — "Ngöndro 1 only", and so on.
+  function buildScopeRow() {
+    const wrap = document.createElement('div');
+    wrap.className = 'scope-row';
+    let activeBtn = null;
+
+    const options = [
+      { code: 'all', label: 'All', count: ctx.data.entries.length },
+      ...ctx.data.sourceCodes.map(code => ({
+        code,
+        label: shortLabel(code, ctx.data.sourceNames[code]),
+        count: ctx.data.entries.filter(e => e.sourceCode === code).length,
+      })),
+    ];
+
+    for (const opt of options) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'scope-chip' + (opt.code === scope ? ' active' : '');
+      btn.setAttribute('aria-pressed', String(opt.code === scope));
+      if (opt.code === scope) activeBtn = btn;
+      btn.title = opt.code === 'all' ? 'All sources' : (ctx.data.sourceNames[opt.code] || opt.code);
+
+      const label = document.createElement('span');
+      label.textContent = opt.label;
+      btn.appendChild(label);
+
+      const count = document.createElement('span');
+      count.className = 'scope-count';
+      count.textContent = String(opt.count);
+      btn.appendChild(count);
+
+      btn.addEventListener('click', () => {
+        scope = opt.code;
+        ctx.settings.lookupScope = scope;
+        ctx.persistSettings();
+        expandedId = null;
+        for (const b of wrap.children) {
+          const on = b === btn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-pressed', String(on));
+        }
+        renderResults();
+      });
+      wrap.appendChild(btn);
+    }
+    // The row scrolls horizontally and the active source can sit off the right
+    // edge, leaving no visible sign of which scope is on. Bring it into view
+    // once mounted — scrollLeft rather than scrollIntoView, which would also
+    // yank the page vertically.
+    wrap.scrollToActive = () => {
+      if (activeBtn) wrap.scrollLeft = Math.max(0, activeBtn.offsetLeft - 16);
+    };
+    return wrap;
+  }
+
+  function scopeFilter() {
+    return scope === 'all' ? undefined : (entry) => entry.sourceCode === scope;
   }
 
   function resultItem(entry) {

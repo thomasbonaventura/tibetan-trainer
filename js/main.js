@@ -1,5 +1,5 @@
 import { loadData } from './data.js';
-import { ProgressStore, loadFilters, saveFilters } from './storage.js';
+import { ProgressStore, loadFilters, saveFilters, loadSettings, saveSettings } from './storage.js';
 import { defaultFilters, reconcileFilters, activeEntrySet } from './filters.js';
 import { createDiscriminationDrill } from './drills/discrimination.js';
 import { createClozeDrill } from './drills/cloze.js';
@@ -35,10 +35,13 @@ async function main() {
   const store = new ProgressStore();
   let filters = reconcileFilters(loadFilters(defaultFilters(data)), data);
   saveFilters(filters);
+  const settings = loadSettings();
 
   const ctx = {
     data,
     store,
+    settings,
+    persistSettings: () => saveSettings(settings),
     getActiveSet: () => activeEntrySet(data, filters),
     container: drillArea,
     setDueCount: (n) => { dueCountEl.textContent = n > 0 ? String(n) : ''; },
@@ -74,8 +77,84 @@ async function main() {
   showMode(drills[initialMode] ? initialMode : 'discrimination');
 
   // ---------- Filters ----------
+  // A number row with −/+ steppers. Used for the recall cohort settings.
+  function stepperRow(label, help, getValue, setValue, min, max) {
+    const wrap = document.createElement('div');
+    wrap.className = 'stepper-row';
+
+    const text = document.createElement('div');
+    text.className = 'stepper-text';
+    const title = document.createElement('div');
+    title.textContent = label;
+    text.appendChild(title);
+    const sub = document.createElement('div');
+    sub.className = 'stepper-help';
+    sub.textContent = help;
+    text.appendChild(sub);
+    wrap.appendChild(text);
+
+    const ctrl = document.createElement('div');
+    ctrl.className = 'stepper';
+    const minus = document.createElement('button');
+    minus.type = 'button';
+    minus.className = 'stepper-btn';
+    minus.textContent = '−';
+    minus.setAttribute('aria-label', 'Decrease ' + label);
+    const value = document.createElement('span');
+    value.className = 'stepper-value';
+    const plus = document.createElement('button');
+    plus.type = 'button';
+    plus.className = 'stepper-btn';
+    plus.textContent = '+';
+    plus.setAttribute('aria-label', 'Increase ' + label);
+
+    const sync = () => {
+      const v = getValue();
+      value.textContent = String(v);
+      minus.disabled = v <= min();
+      plus.disabled = v >= max();
+    };
+    const bump = (delta) => {
+      const v = Math.max(min(), Math.min(max(), getValue() + delta));
+      setValue(v);
+      saveSettings(settings);
+      sync();
+      showMode(currentMode);
+    };
+    minus.addEventListener('click', () => bump(-1));
+    plus.addEventListener('click', () => bump(1));
+
+    ctrl.append(minus, value, plus);
+    wrap.appendChild(ctrl);
+    sync();
+    return wrap;
+  }
+
   function renderFilters() {
     filterBody.innerHTML = '';
+
+    // Recall session sizing
+    const g0 = document.createElement('div');
+    g0.className = 'filter-group';
+    g0.innerHTML = '<h3>Recall session</h3>';
+    const totalAvailable = () => activeEntrySet(data, filters).size;
+    g0.appendChild(stepperRow(
+      'Words in rotation',
+      'Only this many words are drilled at a time.',
+      () => settings.recallCohortSize,
+      (v) => { settings.recallCohortSize = v; },
+      () => 1,
+      () => Math.max(1, totalAvailable()),
+    ));
+    g0.appendChild(stepperRow(
+      'Add this many at a time',
+      'How many new words the “add more” button brings in.',
+      () => settings.recallExpandStep,
+      (v) => { settings.recallExpandStep = v; },
+      () => 1,
+      () => 50,
+    ));
+    filterBody.appendChild(g0);
 
     // Unverified toggle
     const g1 = document.createElement('div');

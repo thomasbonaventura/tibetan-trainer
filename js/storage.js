@@ -4,6 +4,7 @@
 
 const PROGRESS_KEY = 'tibtrainer.progress.v1';
 const FILTERS_KEY = 'tibtrainer.filters.v1';
+const SETTINGS_KEY = 'tibtrainer.settings.v1';
 
 // Days until next review, indexed by box (1-5). Box 0 = never seen.
 const BOX_INTERVALS = [0, 0, 1, 3, 7, 14];
@@ -86,6 +87,24 @@ export function loadFilters(defaults) {
 
 export function saveFilters(filters) {
   save(FILTERS_KEY, filters);
+}
+
+// Recall session shape. cohortSize is the "x" words in rotation; expandStep is
+// the "y" added each time you ask for more. cohortSize is both editable here
+// and incremented by the "add more words" button, so there is only ever one
+// number describing how much is in play.
+export const DEFAULT_SETTINGS = {
+  recallCohortSize: 10,
+  recallExpandStep: 5,
+};
+
+export function loadSettings() {
+  const stored = load(SETTINGS_KEY, {});
+  return { ...DEFAULT_SETTINGS, ...stored };
+}
+
+export function saveSettings(settings) {
+  save(SETTINGS_KEY, settings);
 }
 
 export { todayStr };

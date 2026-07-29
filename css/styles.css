@@ -228,6 +228,74 @@ html, body {
   border-top: 1px solid var(--border);
 }
 
+/* ---------- Recall: cohort + relearning ---------- */
+.cohort-progress {
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* Marks a card that came back because it was missed earlier this session. */
+.again-flag {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bad);
+  background: rgba(224, 102, 90, 0.15);
+  padding: 3px 10px;
+  border-radius: 8px;
+}
+
+.example-block {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Settings steppers ---------- */
+.stepper-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.stepper-row:last-child { border-bottom: none; }
+
+.stepper-text { min-width: 0; font-size: 15px; }
+.stepper-help { color: var(--ink-dim); font-size: 12px; margin-top: 3px; line-height: 1.4; }
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.stepper-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+}
+.stepper-btn:active { background: #33405d; }
+.stepper-btn[disabled] { opacity: 0.35; }
+
+.stepper-value {
+  min-width: 34px;
+  text-align: center;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- Bottom action buttons ---------- */
 .action-row {
   display: flex;
@@ -436,6 +504,40 @@ html, body {
   font-size: 15px;
 }
 .search-clear:active { background: #33405d; }
+
+/* Source scope: horizontally scrollable chip row under the search box. */
+.scope-row {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 -16px 10px;
+  padding: 0 16px 4px;
+}
+.scope-row::-webkit-scrollbar { display: none; }
+
+.scope-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  color: var(--ink-dim);
+  padding: 7px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.scope-chip:active { background: #33405d; }
+.scope-chip.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(245, 196, 81, 0.12);
+}
+
+.scope-count { font-size: 11px; opacity: 0.7; }
 
 .results { flex-shrink: 0; }
 

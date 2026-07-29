@@ -122,15 +122,10 @@ export function createDiscriminationDrill(ctx) {
 
     function showFooter() {
       if (!romanizationShownInPrompt) card.appendChild(romanizationLine(entry));
-      if (group.note) {
-        const note = document.createElement('div');
-        note.className = 'empty-state';
-        note.style.textAlign = 'left';
-        note.style.padding = '0';
-        note.style.marginTop = '14px';
-        note.textContent = group.note;
-        container.appendChild(note);
-      }
+      // group.note is authoring guidance addressed to whoever builds the app
+      // ("Do NOT show the pronunciation on the QUESTION side…"), not something
+      // a learner should ever read. The instruction it carries is already
+      // honoured via group.hideRomanizationOnPrompt above.
       const row = document.createElement('div');
       row.className = 'action-row';
       const next = document.createElement('button');
