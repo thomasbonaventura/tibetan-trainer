@@ -20,11 +20,37 @@ const RELEARN_GAP = 3;
 // often enough that its next review is days out rather than today.
 export const GRADUATED_BOX = 3;
 
-// Candidates in the data file's own order, which is curriculum order (TIB1-001,
-// TIB1-002, … then the Ngöndro sources). Introducing words in this order beats
-// introducing them at random for liturgy study.
+// FNV-1a over the entry id, then a MurmurHash3 fmix32 avalanche. The avalanche
+// is not optional: ids sharing a long prefix ("NEC-020" … "NEC-025") come out of
+// plain FNV with correlated values and sort into a clump, which put eight
+// Nectar entries in the first ten. fmix32 decorrelates them.
+function hashId(id) {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  h ^= h >>> 16;
+  h = Math.imul(h, 2246822507);
+  h ^= h >>> 13;
+  h = Math.imul(h, 3266489909);
+  h ^= h >>> 16;
+  return h >>> 0;
+}
+
+// Candidates in a shuffled order that mixes all sources, so a rotation holds a
+// spread of easy and hard words rather than the first N of the grammar slides.
+//
+// The order must be *stable*, not reshuffled per render: the rotation is defined
+// as the first N of this list, so a fresh shuffle each time would swap words in
+// and out constantly and nothing would ever consolidate. Hashing the permanent
+// entry.id gives a fixed order with no state to persist, and it survives a data
+// re-export — new entries simply interleave.
 export function orderedCandidates(data, activeSet) {
-  return data.entries.filter(e => activeSet.has(e.id)).map(e => e.id);
+  return data.entries
+    .filter(e => activeSet.has(e.id))
+    .map(e => e.id)
+    .sort((a, b) => hashId(a) - hashId(b) || (a < b ? -1 : a > b ? 1 : 0));
 }
 
 export function createSession(drillType) {

@@ -177,6 +177,16 @@ html, body {
 
 .option-btn.tibetan { font-size: 30px; }
 
+/* Per-option pronunciation, added on reveal so every spelling in a false-friend
+   set is labelled — not just the correct one. */
+.option-rom {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: 0.02em;
+  margin-top: 6px;
+}
+
 .option-btn:active { background: #33405d; }
 
 .option-btn.correct {

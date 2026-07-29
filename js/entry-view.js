@@ -106,12 +106,8 @@ export function renderEntryDetail(entry, data, { byTibetan, onNavigate } = {}) {
   root.appendChild(head);
   root.appendChild(romanizationDetail(entry));
 
-  if (entry.wylie) {
-    const w = document.createElement('div');
-    w.className = 'wylie';
-    w.textContent = entry.wylie;
-    root.appendChild(w);
-  }
+  // Wylie is deliberately not displayed — it stays in the search index (so
+  // typing "sems can" still finds སེམས་ཅན་) but is not what you want to read.
 
   // Meaning — one line, or a numbered list when the entry carries several senses.
   const meaning = section('Meaning');

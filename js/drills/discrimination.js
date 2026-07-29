@@ -103,6 +103,7 @@ export function createDiscriminationDrill(ctx) {
       const btn = document.createElement('button');
       btn.className = 'option-btn' + (direction === 'en-ti' ? ' tibetan' : '');
       btn.textContent = opt.label;
+      opt.btn = btn;
       btn.addEventListener('click', () => {
         if (answered) return;
         answered = true;
@@ -122,6 +123,20 @@ export function createDiscriminationDrill(ctx) {
 
     function showFooter() {
       if (!romanizationShownInPrompt) card.appendChild(romanizationLine(entry));
+
+      // When the options are Tibetan spellings, label every one of them with its
+      // own pronunciation — not just the correct answer. Telling བསྔོ་བ་ NGO-WA
+      // from ངོ་བོ་ NGO-WO, or seeing that ཤི་ and གཤིས་ are both SHI, is the
+      // entire point of the drill, and it is unlearnable if the distractors are
+      // unlabelled. Safe on the answer side: the test is already over.
+      if (direction === 'en-ti') {
+        for (const opt of options) {
+          const rom = document.createElement('div');
+          rom.className = 'option-rom';
+          rom.textContent = opt.entry.romanization;
+          opt.btn.appendChild(rom);
+        }
+      }
       // group.note is authoring guidance addressed to whoever builds the app
       // ("Do NOT show the pronunciation on the QUESTION side…"), not something
       // a learner should ever read. The instruction it carries is already
