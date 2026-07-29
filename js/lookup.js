@@ -17,6 +17,11 @@ const SHORT_LABELS = {
   NGO1: 'Ngöndro 1',
   NGO2: 'Ngöndro 2',
   NGO3: 'Ngöndro 3',
+  NGO6: 'Ngöndro 6',
+  // Both Daily Chants sources would otherwise fall back to "Daily Chants" and
+  // give two chips that cannot be told apart.
+  MAN: 'Mandala',
+  SDED: 'Dedication',
   SYL: 'Contrasts',
 };
 
