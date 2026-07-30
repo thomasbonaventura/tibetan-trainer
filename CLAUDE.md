@@ -59,15 +59,31 @@ consumes the JSON.
 python3 tools/import_dictionary.py                     # newest workbook in repo root
 python3 tools/import_dictionary.py --dry-run           # report only
 python3 tools/import_dictionary.py --sample-ids TIB1-041,NGO6-017
-python3 tools/add_entries.py --entries new.json --source-code NGO7 \
-    --source-name "…" --source-short "…"
+python3 tools/add_entries.py  --entries new.json --source-code NGO7 \
+    --source-name "…" --source-short "…"               # add words
+python3 tools/edit_entries.py --edits fixes.json --dry-run   # correct words
 ```
 
-Both need `openpyxl` (`pip3 install openpyxl`). There is no `requirements.txt`
+All need `openpyxl` (`pip3 install openpyxl`). There is no `requirements.txt`
 and no venv; it is installed globally on the author's machine.
 
-To add a PDF's vocabulary, use the **`/updatedata` skill** — it encodes the
-extraction hazards and the column conventions.
+Use the skills rather than driving these by hand: **`/updatedata`** to add a
+PDF's vocabulary, **`/fixdata`** to correct an existing entry. They encode the
+extraction hazards, the column conventions, and the checks that matter.
+
+Neither script edits a workbook in place. Each writes the next dated version
+(`YYYYMMDD …`, or `YYYYMMDD HHMM …` for a second one the same day) and leaves
+the previous as the archive. `entry.id` is never rewritten.
+
+**A gloss lives in more than one place.** A word's English is in its own row and
+repeated in every row that lists it as a related word or false friend. Correct it
+with `edit_entries.py`'s `regloss`, never by editing one cell — otherwise the
+copies go stale and nothing flags it.
+
+**False friends are graph edges; the groups are connected components.** Adding a
+pair can merge two groups, removing one can split a group. A merge that collapses
+an identical-romanization group destroys the app's most valuable card type. After
+any change to that column, diff the group structure — both skills show how.
 
 ### Adding a source
 

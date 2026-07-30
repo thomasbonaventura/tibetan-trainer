@@ -2,7 +2,7 @@
  "meta": {
   "schemaVersion": 2,
   "generated": "2026-07-29",
-  "sourceWorkbook": "20260729 2337 Tibetan_Vocabulary_Dictionary.xlsx",
+  "sourceWorkbook": "20260729 2352 Tibetan_Vocabulary_Dictionary.xlsx",
   "title": "Thomas Hesse — Tibetan vocabulary",
   "entryCount": 533,
   "falseFriendGroupCount": 64,
@@ -1371,10 +1371,9 @@
    "tibetan": "འདི་",
    "romanization": "DI",
    "wylie": "'di",
-   "english": "this; these",
+   "english": "this",
    "senses": [
-    "this",
-    "these"
+    "this"
    ],
    "category": "demonstrative",
    "verbStems": "",
@@ -1395,7 +1394,7 @@
    "falseFriends": [
     {
      "tibetan": "དེ་",
-     "english": "that; those"
+     "english": "that"
     },
     {
      "tibetan": "དེ་རིང་",
@@ -1446,10 +1445,9 @@
    "tibetan": "དེ་",
    "romanization": "DE",
    "wylie": "de",
-   "english": "that; those",
+   "english": "that",
    "senses": [
-    "that",
-    "those"
+    "that"
    ],
    "category": "demonstrative",
    "verbStems": "",
@@ -1466,7 +1464,7 @@
    "falseFriends": [
     {
      "tibetan": "འདི་",
-     "english": "this; these"
+     "english": "this"
     },
     {
      "tibetan": "དེ་རིང་",
@@ -10441,7 +10439,7 @@
     },
     {
      "tibetan": "དེ་",
-     "english": "that; those"
+     "english": "that"
     }
    ],
    "sourceCode": "NEC",
@@ -14169,7 +14167,7 @@
     },
     {
      "tibetan": "དེ་",
-     "english": "that; those"
+     "english": "that"
     }
    ],
    "sourceCode": "NEC",
@@ -26794,11 +26792,11 @@
    "falseFriends": [
     {
      "tibetan": "དེ་",
-     "english": "that; those"
+     "english": "that"
     },
     {
      "tibetan": "འདི་",
-     "english": "this; these"
+     "english": "this"
     }
    ],
    "sourceCode": "NGO2",

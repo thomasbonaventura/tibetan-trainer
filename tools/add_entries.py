@@ -164,6 +164,16 @@ def as_date(value):
         sys.exit(f"dateLearned must be YYYY-MM-DD, got {value!r}")
 
 
+def split_items(value):
+    """Inverse of render_pairs for one side: split a paired column on '/'.
+
+    Never on ';' — that separates senses *inside* one item.
+    """
+    if not value:
+        return []
+    return [p.strip() for p in str(value).split("/")]
+
+
 def render_pairs(pairs, where):
     tibs, engs = [], []
     for pair in pairs:

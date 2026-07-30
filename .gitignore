@@ -1,1 +1,5 @@
 .DS_Store
+
+# Excel lock files, created whenever a workbook is open in Excel. They sit next
+# to the .xlsx and must never be committed — this repo is public.
+~$*
