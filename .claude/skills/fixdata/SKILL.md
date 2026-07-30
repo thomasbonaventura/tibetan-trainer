@@ -23,6 +23,35 @@ inconsistency that nothing will flag.
 
 ---
 
+## How the user will report it
+
+In prose, usually terse, often several at once — "DE means that but NOT those".
+That is fine and expected. Do not ask them to use a format. Your job is to turn
+it into operations, and to notice what is missing.
+
+Three things make a report actionable without a follow-up question:
+
+| | example | if missing |
+|---|---|---|
+| **which entry** | `TIB1-019`, or `དེ་`, or "the DE that means that" | ask — never guess between two entries |
+| **which field** | "the meaning", "the pronunciation", "the note" | usually inferable from what they quote |
+| **what it should say** | "just 'that'" | **ask** — do not invent replacement wording |
+
+An **entry id** or the **Tibetan** identifies a row exactly. A **romanization
+alone does not** — the whole premise of this dictionary is that different words
+share one romanization (ཅན་, སྤྱན་ and ཆེན་ are all CHEN). If a report names only
+a romanization and more than one entry matches, list the matches and ask.
+
+If the user says something is wrong but not what it should be, research it and
+**propose** wording rather than leaving it or inventing it silently.
+
+### Batch them
+
+Every run costs one workbook version, one import and one verification pass,
+regardless of how many cells change. Ten corrections in one run cost the same as
+one. If the user reports a mistake and is likely to find more, say so and offer
+to collect them — but never sit on a correction they asked for now.
+
 ## Steps
 
 ### 1. Find the true extent of the mistake
