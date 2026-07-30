@@ -2,11 +2,11 @@
  "meta": {
   "schemaVersion": 2,
   "generated": "2026-07-29",
-  "sourceWorkbook": "20260729 Tibetan_Vocabulary_Dictionary.xlsx",
+  "sourceWorkbook": "20260729 2337 Tibetan_Vocabulary_Dictionary.xlsx",
   "title": "Thomas Hesse — Tibetan vocabulary",
-  "entryCount": 527,
+  "entryCount": 533,
   "falseFriendGroupCount": 64,
-  "clozeCardCount": 384,
+  "clozeCardCount": 390,
   "entriesWithFalseFriends": 211,
   "unverifiedPronunciationCount": 186,
   "romanizationConvention": "Tergar liturgy style: ཟ→Z, ཞ→ZH, བྱ→J. Approximate Lhasa reading, not phonetic; no tone or vowel length marked.",
@@ -21,62 +21,79 @@
    {
     "code": "TIB1",
     "name": "Tibetan I – Grammar Slides",
+    "short": "Tibetan I",
     "dateLearned": "2025-10-01",
     "entryCount": 113
    },
    {
     "code": "REF",
     "name": "Refuge & Bodhicitta vocab",
+    "short": "Refuge",
     "dateLearned": "2025-12-05",
     "entryCount": 11
    },
    {
     "code": "NEC",
     "name": "Nectar of the Path – Explanation",
+    "short": "Nectar",
     "dateLearned": "2026-06-01",
     "entryCount": 155
    },
    {
     "code": "NGO1",
     "name": "Kagyü Ngöndro 1 – Four Thoughts",
+    "short": "Ngöndro 1",
     "dateLearned": "2026-07-01",
     "entryCount": 44
    },
    {
     "code": "NGO2",
     "name": "Kagyü Ngöndro 2 – Refuge & Bodhicitta",
+    "short": "Ngöndro 2",
     "dateLearned": "2026-07-01",
     "entryCount": 85
    },
    {
     "code": "NGO3",
     "name": "Kagyü Ngöndro 3 – Vajrasattva",
+    "short": "Ngöndro 3",
     "dateLearned": "2026-07-01",
     "entryCount": 33
    },
    {
     "code": "SYL",
     "name": "Contrast entries (bare syllables & forms)",
+    "short": "Contrasts",
     "dateLearned": "2026-07-01",
     "entryCount": 43
    },
    {
     "code": "NGO6",
     "name": "Kagyü Ngöndro 6 – Dedications & Aspirations",
+    "short": "Ngöndro 6",
     "dateLearned": "2026-07-29",
     "entryCount": 21
    },
    {
     "code": "MAN",
     "name": "Daily Chants – Mandala Offering",
+    "short": "Mandala",
     "dateLearned": "2026-07-29",
     "entryCount": 15
    },
    {
     "code": "SDED",
     "name": "Daily Chants – Short Dedication",
+    "short": "Dedication",
     "dateLearned": "2026-07-29",
     "entryCount": 7
+   },
+   {
+    "code": "TWD",
+    "name": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+    "short": "Wheel",
+    "dateLearned": "2026-07-29",
+    "entryCount": 6
    }
   ]
  },
@@ -204,9 +221,10 @@
     "Tibetan I – Grammar Slides",
     "Refuge & Bodhicitta vocab (5 Nov 2025)",
     "Nectar of the Path – Explanation",
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slide 1 (basic vocab); 3 | Refuge L1 | Nectar v.4 | Ngöndro 1 – Four Thoughts v.1g; Ngöndro 2 – Refuge & Bodhicitta | Ngöndro 6 v.6j",
+   "lesson": "Slide 1 (basic vocab); 3 | Refuge L1 | Nectar v.4 | Ngöndro 1 – Four Thoughts v.1g; Ngöndro 2 – Refuge & Bodhicitta | Ngöndro 6 v.6j | Turn the Wheel of Dharma v.d",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
@@ -225,8 +243,13 @@
      "lesson": "Ngöndro 1 – Four Thoughts v.1g; Ngöndro 2 – Refuge & Bodhicitta"
     },
     {
-     "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
      "lesson": "Ngöndro 6 v.6j"
+    },
+    {
+     "source": null,
+     "lesson": "Turn the Wheel of Dharma v.d",
+     "sourceMissing": true
     }
    ],
    "dateLearned": "2025-10-01",
@@ -1225,9 +1248,10 @@
    "sources": [
     "Tibetan I – Grammar Slides",
     "Four Immeasurables (22 Oct 2025)",
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slide 1 (basic vocab); 4; 21 | Verse 1 (loving-kindness) | Ngöndro 2 – Refuge & Bodhicitta v.2m; Ngöndro 3 – Vajrasattva v.3f",
+   "lesson": "Slide 1 (basic vocab); 4; 21 | Verse 1 (loving-kindness) | Ngöndro 2 – Refuge & Bodhicitta v.2m; Ngöndro 3 – Vajrasattva v.3f | Turn the Wheel of Dharma v.a",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
@@ -1240,6 +1264,10 @@
     {
      "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
      "lesson": "Ngöndro 2 – Refuge & Bodhicitta v.2m; Ngöndro 3 – Vajrasattva v.3f"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.a"
     }
    ],
    "dateLearned": "2025-10-01",
@@ -1555,9 +1583,10 @@
     "Tibetan I – Grammar Slides",
     "Refuge & Bodhicitta vocab (5 Nov 2025)",
     "Nectar of the Path – Explanation",
-    "Daily Chants 2.0 (2023) – Dedication Prayers"
+    "Daily Chants 2.0 (2023) – Dedication Prayers",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slide 4 | Refuge L1 | Nectar vv.4–5, 21, 39 | Short Dedication v.b",
+   "lesson": "Slide 4 | Refuge L1 | Nectar vv.4–5, 21, 39 | Short Dedication v.b | Turn the Wheel of Dharma v.a",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
@@ -1574,6 +1603,10 @@
     {
      "source": "Daily Chants 2.0 (2023) – Dedication Prayers",
      "lesson": "Short Dedication v.b"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.a"
     }
    ],
    "dateLearned": "2025-10-01",
@@ -1715,9 +1748,10 @@
    "sources": [
     "Tibetan I – Grammar Slides",
     "Refuge & Bodhicitta vocab (5 Nov 2025)",
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slides 6; 30 | Refuge L1 | Ngöndro 6 vv.6c, 6d",
+   "lesson": "Slides 6; 30 | Refuge L1 | Ngöndro 6 vv.6c, 6d | Turn the Wheel of Dharma vv.a, b, c, d",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
@@ -1730,6 +1764,10 @@
     {
      "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
      "lesson": "Ngöndro 6 vv.6c, 6d"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma vv.a, b, c, d"
     }
    ],
    "dateLearned": "2025-10-01",
@@ -4293,9 +4331,10 @@
     "Tibetan I – Grammar Slides",
     "Four Immeasurables (22 Oct 2025)",
     "Nectar of the Path – Explanation",
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slides 19; 36–40 | Verses 1–4 | Nectar vv.6, 15, 29, 32–33, 37–38 | Ngöndro 6 vv.6i, 6j",
+   "lesson": "Slides 19; 36–40 | Verses 1–4 | Nectar vv.6, 15, 29, 32–33, 37–38 | Ngöndro 6 vv.6i, 6j | Turn the Wheel of Dharma v.a",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
@@ -4312,6 +4351,10 @@
     {
      "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
      "lesson": "Ngöndro 6 vv.6i, 6j"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.a"
     }
    ],
    "dateLearned": "2025-10-01",
@@ -5057,13 +5100,18 @@
    "falseFriends": [],
    "sourceCode": "TIB1",
    "sources": [
-    "Tibetan I – Grammar Slides"
+    "Tibetan I – Grammar Slides",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slide 25",
+   "lesson": "Slide 25 | Turn the Wheel of Dharma title; v.d",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
      "lesson": "Slide 25"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma title; v.d"
     }
    ],
    "dateLearned": "2025-10-01",
@@ -5757,9 +5805,10 @@
    "sources": [
     "Tibetan I – Grammar Slides",
     "Nectar of the Path – Explanation",
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Slide 27 | Nectar vv.4, 7, 10 | Ngöndro 1 – Four Thoughts v.1l",
+   "lesson": "Slide 27 | Nectar vv.4, 7, 10 | Ngöndro 1 – Four Thoughts v.1l | Turn the Wheel of Dharma v.a",
    "sourceLessons": [
     {
      "source": "Tibetan I – Grammar Slides",
@@ -5772,6 +5821,10 @@
     {
      "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
      "lesson": "Ngöndro 1 – Four Thoughts v.1l"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.a"
     }
    ],
    "dateLearned": "2025-10-01",
@@ -10477,9 +10530,10 @@
    "sourceCode": "NEC",
    "sources": [
     "Nectar of the Path – Explanation",
-    "Daily Chants 2.0 (2023) – Mandala Offering"
+    "Daily Chants 2.0 (2023) – Mandala Offering",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Nectar vv.4, 19, 29, 36–37 | Mandala Offering v.c",
+   "lesson": "Nectar vv.4, 19, 29, 36–37 | Mandala Offering v.c | Turn the Wheel of Dharma v.d",
    "sourceLessons": [
     {
      "source": "Nectar of the Path – Explanation",
@@ -10488,6 +10542,10 @@
     {
      "source": "Daily Chants 2.0 (2023) – Mandala Offering",
      "lesson": "Mandala Offering v.c"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.d"
     }
    ],
    "dateLearned": "2026-06-01",
@@ -14925,13 +14983,18 @@
    ],
    "sourceCode": "NEC",
    "sources": [
-    "Nectar of the Path – Explanation"
+    "Nectar of the Path – Explanation",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Nectar v.20 (pp.108–109)",
+   "lesson": "Nectar v.20 (pp.108–109) | Turn the Wheel of Dharma v.b",
    "sourceLessons": [
     {
      "source": "Nectar of the Path – Explanation",
      "lesson": "Nectar v.20 (pp.108–109)"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.b"
     }
    ],
    "dateLearned": "2026-06-01",
@@ -18620,9 +18683,10 @@
    "sourceCode": "NEC",
    "sources": [
     "Nectar of the Path – Explanation",
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Nectar v.37 (p174) | Ngöndro 3 – Vajrasattva vv.3f, 3p",
+   "lesson": "Nectar v.37 (p174) | Ngöndro 3 – Vajrasattva vv.3f, 3p | Turn the Wheel of Dharma v.d",
    "sourceLessons": [
     {
      "source": "Nectar of the Path – Explanation",
@@ -18631,6 +18695,10 @@
     {
      "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
      "lesson": "Ngöndro 3 – Vajrasattva vv.3f, 3p"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.d"
     }
    ],
    "dateLearned": "2026-06-01",
@@ -22463,13 +22531,18 @@
    "falseFriends": [],
    "sourceCode": "NGO1",
    "sources": [
-    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)"
+    "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
    ],
-   "lesson": "Ngöndro 1 – Four Thoughts v.1r",
+   "lesson": "Ngöndro 1 – Four Thoughts v.1r | Turn the Wheel of Dharma v.c",
    "sourceLessons": [
     {
      "source": "Kagyü Ngöndro (Chariot for Traveling the Noble Path)",
      "lesson": "Ngöndro 1 – Four Thoughts v.1r"
+    },
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.c"
     }
    ],
    "dateLearned": "2026-07-01",
@@ -36885,6 +36958,377 @@
     }
    },
    "falseFriendGroup": 8
+  },
+  {
+   "id": "TWD-001",
+   "tibetan": "བྱེ་བྲག་",
+   "romanization": "JÉ DRAK",
+   "wylie": "bye brag",
+   "english": "distinction; variety; particular type",
+   "senses": [
+    "distinction",
+    "variety",
+    "particular type"
+   ],
+   "category": "noun",
+   "verbStems": "",
+   "volitionality": "",
+   "register": "",
+   "sanskrit": "",
+   "notes": "Systematic opposite of ཐུན་མོང་ “common, shared”: བྱེ་བྲག་ is the particular case, ཐུན་མོང་ the general one. Here བསམ་པ་ “thoughts” and བློ་ཡི་བྱེ་བྲག་ “the distinctions of mind” together name what the teaching is matched to.",
+   "related": [
+    {
+     "tibetan": "ཐུན་མོང་",
+     "english": "common; ordinary; shared"
+    },
+    {
+     "tibetan": "བློ་",
+     "english": "mind; mindset; intellect"
+    }
+   ],
+   "falseFriends": [],
+   "sourceCode": "TWD",
+   "sources": [
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
+   ],
+   "lesson": "Turn the Wheel of Dharma v.b",
+   "sourceLessons": [
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.b"
+    }
+   ],
+   "dateLearned": "2026-07-29",
+   "dateAdded": "2026-07-29",
+   "mastery": null,
+   "pronunciationVerified": true,
+   "pronunciationProvenance": "from source",
+   "example": {
+    "tibetan": "བློ་ཡི་བྱེ་བྲག་ཇི་ལྟ་བར།",
+    "english": "just as the distinctions of [their] minds [are],",
+    "tokens": [
+     "བློ་",
+     "ཡི་",
+     "བྱེ་",
+     "བྲག་",
+     "ཇི་",
+     "ལྟ་",
+     "བར།"
+    ],
+    "blank": {
+     "start": 2,
+     "length": 2,
+     "answer": "བྱེ་བྲག་"
+    }
+   },
+   "falseFriendGroup": null
+  },
+  {
+   "id": "TWD-002",
+   "tibetan": "ཇི་ལྟ་བར་",
+   "romanization": "JI TA WAR",
+   "wylie": "ji lta bar",
+   "english": "just as; in accordance with how [it is]",
+   "senses": [
+    "just as",
+    "in accordance with how [it is]"
+   ],
+   "category": "phrase (comparative)",
+   "verbStems": "",
+   "volitionality": "",
+   "register": "",
+   "sanskrit": "",
+   "notes": "ཇི་ + ལྟ་བ་ + terminative ར་ — “in the manner in which [it] is”. It governs the whole preceding phrase, so the request in v.d is matched to the beings' capacities rather than given unconditionally.",
+   "related": [
+    {
+     "tibetan": "ལྟ་བ་",
+     "english": "to look; to observe"
+    }
+   ],
+   "falseFriends": [],
+   "sourceCode": "TWD",
+   "sources": [
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
+   ],
+   "lesson": "Turn the Wheel of Dharma v.b",
+   "sourceLessons": [
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.b"
+    }
+   ],
+   "dateLearned": "2026-07-29",
+   "dateAdded": "2026-07-29",
+   "mastery": null,
+   "pronunciationVerified": true,
+   "pronunciationProvenance": "from source",
+   "example": {
+    "tibetan": "བློ་ཡི་བྱེ་བྲག་ཇི་ལྟ་བར།",
+    "english": "just as the distinctions of [their] minds [are],",
+    "tokens": [
+     "བློ་",
+     "ཡི་",
+     "བྱེ་",
+     "བྲག་",
+     "ཇི་",
+     "ལྟ་",
+     "བར།"
+    ],
+    "blank": {
+     "start": 4,
+     "length": 3,
+     "answer": "ཇི་ལྟ་བར།"
+    }
+   },
+   "falseFriendGroup": null
+  },
+  {
+   "id": "TWD-003",
+   "tibetan": "ཆེ་ཆུང་",
+   "romanization": "CHÉ CHUNG",
+   "wylie": "che chung",
+   "english": "great and small; relative size; magnitude",
+   "senses": [
+    "great and small",
+    "relative size",
+    "magnitude"
+   ],
+   "category": "noun",
+   "verbStems": "",
+   "volitionality": "",
+   "register": "",
+   "sanskrit": "",
+   "notes": "A dvandva pair — literally “big-small” — spanning the greater and lesser vehicles, alongside ཐུན་མོང་ the common one. The published English reorders these as “Common, Great and Lesser”.",
+   "related": [
+    {
+     "tibetan": "ཆེ་བ་",
+     "english": "great; greatness"
+    }
+   ],
+   "falseFriends": [],
+   "sourceCode": "TWD",
+   "sources": [
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
+   ],
+   "lesson": "Turn the Wheel of Dharma v.c",
+   "sourceLessons": [
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.c"
+    }
+   ],
+   "dateLearned": "2026-07-29",
+   "dateAdded": "2026-07-29",
+   "mastery": null,
+   "pronunciationVerified": true,
+   "pronunciationProvenance": "from source",
+   "example": {
+    "tibetan": "ཆེ་ཆུང་ཐུན་མོང་ཐེག་པ་ཡི།",
+    "english": "of the great, lesser and common vehicles,",
+    "tokens": [
+     "ཆེ་",
+     "ཆུང་",
+     "ཐུན་",
+     "མོང་",
+     "ཐེག་",
+     "པ་",
+     "ཡི།"
+    ],
+    "blank": {
+     "start": 0,
+     "length": 2,
+     "answer": "ཆེ་ཆུང་"
+    }
+   },
+   "falseFriendGroup": null
+  },
+  {
+   "id": "TWD-004",
+   "tibetan": "ཐེག་པ་",
+   "romanization": "TEK PA",
+   "wylie": "theg pa",
+   "english": "vehicle; yāna",
+   "senses": [
+    "vehicle",
+    "yāna"
+   ],
+   "category": "noun",
+   "verbStems": "",
+   "volitionality": "",
+   "register": "",
+   "sanskrit": "yāna",
+   "notes": "Literally “that which carries”. The three vehicles are named in this line by ཆེ་ཆུང་ (greater and lesser) and ཐུན་མོང་ (common).",
+   "related": [
+    {
+     "tibetan": "ཐུན་མོང་",
+     "english": "common; ordinary; shared"
+    }
+   ],
+   "falseFriends": [],
+   "sourceCode": "TWD",
+   "sources": [
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
+   ],
+   "lesson": "Turn the Wheel of Dharma v.c",
+   "sourceLessons": [
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.c"
+    }
+   ],
+   "dateLearned": "2026-07-29",
+   "dateAdded": "2026-07-29",
+   "mastery": null,
+   "pronunciationVerified": true,
+   "pronunciationProvenance": "from source",
+   "example": {
+    "tibetan": "ཆེ་ཆུང་ཐུན་མོང་ཐེག་པ་ཡི།",
+    "english": "of the great, lesser and common vehicles,",
+    "tokens": [
+     "ཆེ་",
+     "ཆུང་",
+     "ཐུན་",
+     "མོང་",
+     "ཐེག་",
+     "པ་",
+     "ཡི།"
+    ],
+    "blank": {
+     "start": 4,
+     "length": 2,
+     "answer": "ཐེག་པ་"
+    }
+   },
+   "falseFriendGroup": null
+  },
+  {
+   "id": "TWD-005",
+   "tibetan": "བསྐོར་",
+   "romanization": "KOR",
+   "wylie": "bskor",
+   "english": "turned; revolved (past and future stem of སྐོར་བ་)",
+   "senses": [
+    "turned",
+    "revolved (past and future stem of སྐོར་བ་)"
+   ],
+   "category": "verb",
+   "verbStems": "skor / bskor / bskor / skor",
+   "volitionality": "volitional; transitive",
+   "register": "",
+   "sanskrit": "",
+   "notes": "Past and future stem of སྐོར་བ་, here with the ལ་དོན་ དུ་ before གསོལ་ — “request that [it] be turned”. སྐོར་བ་ is the volitional counterpart of non-volitional འཁོར་བ་ “to rotate”.",
+   "related": [
+    {
+     "tibetan": "སྐོར་བ་",
+     "english": "to spin (something)"
+    },
+    {
+     "tibetan": "འཁོར་བ་",
+     "english": "samsara; to rotate"
+    },
+    {
+     "tibetan": "འཁོར་ལོ་",
+     "english": "wheel; prayer wheel"
+    }
+   ],
+   "falseFriends": [],
+   "sourceCode": "TWD",
+   "sources": [
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
+   ],
+   "lesson": "Turn the Wheel of Dharma v.d",
+   "sourceLessons": [
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma v.d"
+    }
+   ],
+   "dateLearned": "2026-07-29",
+   "dateAdded": "2026-07-29",
+   "mastery": null,
+   "pronunciationVerified": true,
+   "pronunciationProvenance": "from source",
+   "example": {
+    "tibetan": "ཆོས་ཀྱི་འཁོར་ལོ་བསྐོར་དུ་གསོལ།",
+    "english": "[I] request [you] to turn the wheel of Dharma.",
+    "tokens": [
+     "ཆོས་",
+     "ཀྱི་",
+     "འཁོར་",
+     "ལོ་",
+     "བསྐོར་",
+     "དུ་",
+     "གསོལ།"
+    ],
+    "blank": {
+     "start": 4,
+     "length": 1,
+     "answer": "བསྐོར་"
+    }
+   },
+   "falseFriendGroup": null
+  },
+  {
+   "id": "TWD-006",
+   "tibetan": "ཆོས་ཀྱི་འཁོར་ལོ་",
+   "romanization": "CHÖ KYI KHOR LO",
+   "wylie": "chos kyi 'khor lo",
+   "english": "the Wheel of Dharma",
+   "senses": [
+    "the Wheel of Dharma"
+   ],
+   "category": "noun phrase",
+   "verbStems": "",
+   "volitionality": "",
+   "register": "",
+   "sanskrit": "dharmacakra",
+   "notes": "The prayer's title phrase: ཆོས་ + genitive ཀྱི་ + འཁོར་ལོ་. Turning it is the act being requested.",
+   "related": [
+    {
+     "tibetan": "ཆོས་",
+     "english": "Dharma; phenomena"
+    },
+    {
+     "tibetan": "འཁོར་ལོ་",
+     "english": "wheel; prayer wheel"
+    }
+   ],
+   "falseFriends": [],
+   "sourceCode": "TWD",
+   "sources": [
+    "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma"
+   ],
+   "lesson": "Turn the Wheel of Dharma title; v.d",
+   "sourceLessons": [
+    {
+     "source": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+     "lesson": "Turn the Wheel of Dharma title; v.d"
+    }
+   ],
+   "dateLearned": "2026-07-29",
+   "dateAdded": "2026-07-29",
+   "mastery": null,
+   "pronunciationVerified": true,
+   "pronunciationProvenance": "from source",
+   "example": {
+    "tibetan": "ཆོས་ཀྱི་འཁོར་ལོ་བསྐོར་དུ་གསོལ།",
+    "english": "[I] request [you] to turn the wheel of Dharma.",
+    "tokens": [
+     "ཆོས་",
+     "ཀྱི་",
+     "འཁོར་",
+     "ལོ་",
+     "བསྐོར་",
+     "དུ་",
+     "གསོལ།"
+    ],
+    "blank": {
+     "start": 0,
+     "length": 4,
+     "answer": "ཆོས་ཀྱི་འཁོར་ལོ་"
+    }
+   },
+   "falseFriendGroup": null
   }
  ],
  "falseFriendGroups": [
@@ -47137,6 +47581,126 @@
     "start": 6,
     "length": 2,
     "answer": "འཁྲུག་པ་"
+   }
+  },
+  {
+   "cardId": "cloze-TWD-001",
+   "entryId": "TWD-001",
+   "tibetan": "བློ་ཡི་བྱེ་བྲག་ཇི་ལྟ་བར།",
+   "english": "just as the distinctions of [their] minds [are],",
+   "tokens": [
+    "བློ་",
+    "ཡི་",
+    "བྱེ་",
+    "བྲག་",
+    "ཇི་",
+    "ལྟ་",
+    "བར།"
+   ],
+   "blank": {
+    "start": 2,
+    "length": 2,
+    "answer": "བྱེ་བྲག་"
+   }
+  },
+  {
+   "cardId": "cloze-TWD-002",
+   "entryId": "TWD-002",
+   "tibetan": "བློ་ཡི་བྱེ་བྲག་ཇི་ལྟ་བར།",
+   "english": "just as the distinctions of [their] minds [are],",
+   "tokens": [
+    "བློ་",
+    "ཡི་",
+    "བྱེ་",
+    "བྲག་",
+    "ཇི་",
+    "ལྟ་",
+    "བར།"
+   ],
+   "blank": {
+    "start": 4,
+    "length": 3,
+    "answer": "ཇི་ལྟ་བར།"
+   }
+  },
+  {
+   "cardId": "cloze-TWD-003",
+   "entryId": "TWD-003",
+   "tibetan": "ཆེ་ཆུང་ཐུན་མོང་ཐེག་པ་ཡི།",
+   "english": "of the great, lesser and common vehicles,",
+   "tokens": [
+    "ཆེ་",
+    "ཆུང་",
+    "ཐུན་",
+    "མོང་",
+    "ཐེག་",
+    "པ་",
+    "ཡི།"
+   ],
+   "blank": {
+    "start": 0,
+    "length": 2,
+    "answer": "ཆེ་ཆུང་"
+   }
+  },
+  {
+   "cardId": "cloze-TWD-004",
+   "entryId": "TWD-004",
+   "tibetan": "ཆེ་ཆུང་ཐུན་མོང་ཐེག་པ་ཡི།",
+   "english": "of the great, lesser and common vehicles,",
+   "tokens": [
+    "ཆེ་",
+    "ཆུང་",
+    "ཐུན་",
+    "མོང་",
+    "ཐེག་",
+    "པ་",
+    "ཡི།"
+   ],
+   "blank": {
+    "start": 4,
+    "length": 2,
+    "answer": "ཐེག་པ་"
+   }
+  },
+  {
+   "cardId": "cloze-TWD-005",
+   "entryId": "TWD-005",
+   "tibetan": "ཆོས་ཀྱི་འཁོར་ལོ་བསྐོར་དུ་གསོལ།",
+   "english": "[I] request [you] to turn the wheel of Dharma.",
+   "tokens": [
+    "ཆོས་",
+    "ཀྱི་",
+    "འཁོར་",
+    "ལོ་",
+    "བསྐོར་",
+    "དུ་",
+    "གསོལ།"
+   ],
+   "blank": {
+    "start": 4,
+    "length": 1,
+    "answer": "བསྐོར་"
+   }
+  },
+  {
+   "cardId": "cloze-TWD-006",
+   "entryId": "TWD-006",
+   "tibetan": "ཆོས་ཀྱི་འཁོར་ལོ་བསྐོར་དུ་གསོལ།",
+   "english": "[I] request [you] to turn the wheel of Dharma.",
+   "tokens": [
+    "ཆོས་",
+    "ཀྱི་",
+    "འཁོར་",
+    "ལོ་",
+    "བསྐོར་",
+    "དུ་",
+    "གསོལ།"
+   ],
+   "blank": {
+    "start": 0,
+    "length": 4,
+    "answer": "ཆོས་ཀྱི་འཁོར་ལོ་"
    }
   }
  ]

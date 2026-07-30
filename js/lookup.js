@@ -8,25 +8,15 @@ import { renderEntryDetail } from './entry-view.js';
 const RESULT_LIMIT = 50;
 
 // Source names are full titles ("Kagyü Ngöndro 1 – Four Thoughts") and too wide
-// for a chip on a phone. Anything not listed falls back to the text before the
-// first dash or bracket, so a newly added source still gets a sane label.
-const SHORT_LABELS = {
-  TIB1: 'Tibetan I',
-  REF: 'Refuge',
-  NEC: 'Nectar',
-  NGO1: 'Ngöndro 1',
-  NGO2: 'Ngöndro 2',
-  NGO3: 'Ngöndro 3',
-  NGO6: 'Ngöndro 6',
-  // Both Daily Chants sources would otherwise fall back to "Daily Chants" and
-  // give two chips that cannot be told apart.
-  MAN: 'Mandala',
-  SDED: 'Dedication',
-  SYL: 'Contrasts',
-};
-
-function shortLabel(code, fullName) {
-  if (SHORT_LABELS[code]) return SHORT_LABELS[code];
+// for a chip on a phone, so meta.sources carries a hand-picked `short` for each
+// one (maintained in tools/source_names.json). The fallback — text before the
+// first dash or bracket — is only for data predating that field, and cannot be
+// relied on to stay distinct: "Daily Chants – Mandala Offering" and
+// "Daily Chants – Short Dedication" both reduce to "Daily Chants".
+function shortLabel(code, ctx) {
+  const source = (ctx.data.meta.sources || []).find(s => s.code === code);
+  if (source && source.short) return source.short;
+  const fullName = ctx.data.sourceNames[code];
   return (fullName || code).split(/\s[–\-(]/)[0].trim();
 }
 
@@ -157,7 +147,7 @@ export function createLookupView(ctx) {
       none.className = 'empty-state';
       none.textContent = scope === 'all'
         ? 'No matches for “' + query.trim() + '”.'
-        : 'No matches for “' + query.trim() + '” in ' + shortLabel(scope, ctx.data.sourceNames[scope]) + '.';
+        : 'No matches for “' + query.trim() + '” in ' + shortLabel(scope, ctx) + '.';
       resultsEl.appendChild(none);
       // Offer the wider search rather than leaving a dead end.
       if (scope !== 'all') {
@@ -207,7 +197,7 @@ export function createLookupView(ctx) {
       { code: 'all', label: 'All', count: ctx.data.entries.length },
       ...ctx.data.sourceCodes.map(code => ({
         code,
-        label: shortLabel(code, ctx.data.sourceNames[code]),
+        label: shortLabel(code, ctx),
         count: ctx.data.entries.filter(e => e.sourceCode === code).length,
       })),
     ];

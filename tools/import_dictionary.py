@@ -64,21 +64,15 @@ SHEET = "Dictionary"
 
 # Human-readable source names, keyed by the ID prefix in column A. Column R names
 # the *book* (all three Ngöndro files say "Kagyü Ngöndro (Chariot…)"), so the
-# per-code names come from the workbook's About sheet, which is where the codes
-# are defined. A new code with no name here is a hard error rather than a raw
-# code leaking into the UI footer.
-SOURCE_NAMES = {
-    "TIB1": "Tibetan I – Grammar Slides",
-    "REF": "Refuge & Bodhicitta vocab",
-    "NEC": "Nectar of the Path – Explanation",
-    "NGO1": "Kagyü Ngöndro 1 – Four Thoughts",
-    "NGO2": "Kagyü Ngöndro 2 – Refuge & Bodhicitta",
-    "NGO3": "Kagyü Ngöndro 3 – Vajrasattva",
-    "NGO6": "Kagyü Ngöndro 6 – Dedications & Aspirations",
-    "MAN": "Daily Chants – Mandala Offering",
-    "SDED": "Daily Chants – Short Dedication",
-    "SYL": "Contrast entries (bare syllables & forms)",
-}
+# per-code names live in tools/source_names.json, which add_entries.py maintains.
+# A code with no entry there is a hard error rather than a raw code leaking into
+# the UI.
+SOURCE_NAMES_FILE = pathlib.Path(__file__).resolve().parent / "source_names.json"
+
+
+def load_source_names():
+    with SOURCE_NAMES_FILE.open(encoding="utf-8") as fh:
+        return json.load(fh)["sources"]
 
 # Editorial guidance carried in meta for the app's benefit. Not spreadsheet
 # content; the romanization convention restates the About sheet's note.
@@ -412,12 +406,13 @@ def build_meta(entries, about, workbook_name):
         if e["sourceCode"] not in codes:
             codes.append(e["sourceCode"])
 
-    unknown = [c for c in codes if c not in SOURCE_NAMES]
+    names = load_source_names()
+    unknown = [c for c in codes if c not in names]
     if unknown:
         sys.exit(
             f"no display name for source code(s) {unknown}. Add them to "
-            "SOURCE_NAMES (the About sheet defines the codes) so the app does not "
-            "show a bare code."
+            f"{SOURCE_NAMES_FILE.name} (add_entries.py normally does this for you) "
+            "so the app does not show a bare code."
         )
 
     sources = []
@@ -426,7 +421,9 @@ def build_meta(entries, about, workbook_name):
                  if e["sourceCode"] == code and e["dateLearned"]]
         sources.append({
             "code": code,
-            "name": SOURCE_NAMES[code],
+            "name": names[code]["name"],
+            # Compact label for the Look up scope chips; see source_names.json.
+            "short": names[code].get("short") or names[code]["name"],
             # Most common date learned across the code's entries; null when the
             # code was never taught on a date (contrast entries).
             "dateLearned": collections.Counter(dates).most_common(1)[0][0] if dates else None,
@@ -572,7 +569,8 @@ def main():
     here = pathlib.Path(__file__).resolve().parent.parent
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--xlsx", required=True, help="path to the workbook")
+    ap.add_argument("--xlsx", default=None,
+                    help="path to the workbook (default: newest dated workbook in the repo root)")
     ap.add_argument("--out", default=str(here / "tibetan_trainer_data.json"))
     ap.add_argument("--previous", default=None,
                     help="prior JSON to diff ids against (default: --out if it exists)")
@@ -583,8 +581,24 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="report only, write nothing")
     args = ap.parse_args()
 
+    xlsx = args.xlsx
+    if not xlsx:
+        # "20260729 …" or the same-day variant "20260729 1930 …". Sorted by parsed
+        # date/time, because lexicographically '20260729 1930' < '20260729 T…'.
+        pattern = re.compile(r"^(\d{8})(?: (\d{4}))? Tibetan_Vocabulary_Dictionary\.xlsx$")
+        found = sorted(
+            ((pattern.match(p.name), p) for p in here.glob("20* Tibetan_Vocabulary_Dictionary.xlsx")),
+            key=lambda pair: (pair[0].group(1), pair[0].group(2) or "0000") if pair[0] else ("", ""),
+        )
+        found = [p for m, p in found if m]
+        if not found:
+            sys.exit("no dated workbook in the repo root — pass --xlsx")
+        xlsx = str(found[-1])
+        # stderr, so --sample-ids output stays pipeable JSON on stdout.
+        print(f"using {pathlib.Path(xlsx).name}", file=sys.stderr)
+
     report = Report()
-    data, rows = build(args.xlsx, report)
+    data, rows = build(xlsx, report)
 
     problems = verify(data, rows)
     if problems:

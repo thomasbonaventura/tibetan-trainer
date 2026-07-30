@@ -1,0 +1,49 @@
+{
+  "_comment": "Source code -> display names. 'name' is the full title shown in the entry footer and the Settings source filter; 'short' is the compact label on the Look up scope chips, which must stay distinct from every other short label and fit a phone. Both scripts read this file, and add_entries.py appends to it when a new source code is introduced, so adding a source never means editing Python or JS.",
+  "sources": {
+    "TIB1": {
+      "name": "Tibetan I – Grammar Slides",
+      "short": "Tibetan I"
+    },
+    "REF": {
+      "name": "Refuge & Bodhicitta vocab",
+      "short": "Refuge"
+    },
+    "NEC": {
+      "name": "Nectar of the Path – Explanation",
+      "short": "Nectar"
+    },
+    "NGO1": {
+      "name": "Kagyü Ngöndro 1 – Four Thoughts",
+      "short": "Ngöndro 1"
+    },
+    "NGO2": {
+      "name": "Kagyü Ngöndro 2 – Refuge & Bodhicitta",
+      "short": "Ngöndro 2"
+    },
+    "NGO3": {
+      "name": "Kagyü Ngöndro 3 – Vajrasattva",
+      "short": "Ngöndro 3"
+    },
+    "NGO6": {
+      "name": "Kagyü Ngöndro 6 – Dedications & Aspirations",
+      "short": "Ngöndro 6"
+    },
+    "MAN": {
+      "name": "Daily Chants – Mandala Offering",
+      "short": "Mandala"
+    },
+    "SDED": {
+      "name": "Daily Chants – Short Dedication",
+      "short": "Dedication"
+    },
+    "SYL": {
+      "name": "Contrast entries (bare syllables & forms)",
+      "short": "Contrasts"
+    },
+    "TWD": {
+      "name": "Daily Chants 2.0 (2023) – Turn the Wheel of Dharma",
+      "short": "Wheel"
+    }
+  }
+}
