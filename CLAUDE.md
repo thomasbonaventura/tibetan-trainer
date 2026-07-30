@@ -62,6 +62,7 @@ python3 tools/import_dictionary.py --sample-ids TIB1-041,NGO6-017
 python3 tools/add_entries.py  --entries new.json --source-code NGO7 \
     --source-name "…" --source-short "…"               # add words
 python3 tools/edit_entries.py --edits fixes.json --dry-run   # correct words
+python3 tools/suggest_false_friends.py --source TWD          # propose pairs (writes nothing)
 ```
 
 All need `openpyxl` (`pip3 install openpyxl`). There is no `requirements.txt`
@@ -84,6 +85,12 @@ copies go stale and nothing flags it.
 pair can merge two groups, removing one can split a group. A merge that collapses
 an identical-romanization group destroys the app's most valuable card type. After
 any change to that column, diff the group structure — both skills show how.
+
+**Never write the false-friend columns unasked.** They are the learner's to fill.
+`suggest_false_friends.py` proposes candidates with their group impact and writes
+nothing; the user approves. Do that *before* the workbook is written — a pair on
+a new row is sufficient, because the relation is undirected, so approving early
+costs one workbook version instead of two.
 
 **Common words stop collecting sources.** A word already in 3+ sources does not
 gain another when it turns up again (`--common-threshold`, default 3). Column R

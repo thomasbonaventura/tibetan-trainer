@@ -116,24 +116,21 @@ gloss — it would become an item boundary on re-import, and the script rejects 
 | `pronCheck` | `from source` if the material prints the pronunciation, `from slides` for the grammar deck, otherwise `derived – reviewed` |
 | `mastery` | never fill it. It is the learner's column and the app owns progress |
 
-#### Do not fill in false friends
+#### Never write false friends without approval — propose them
 
-Two reasons, and the second one bites hard.
+Leave `falseFriends` empty in the staged entries. The About sheet marks those
+columns as the learner's own ("Left blank for Thomas to supply"), and the user
+decides what goes in them. Step 4b generates candidates for them to approve.
 
-The About sheet marks the false-friend columns as the learner's own fill-in
-columns ("Left blank for Thomas to supply" — the shading means exactly that).
+The reason this matters beyond etiquette: **false friends are edges in a graph,
+and the groups are its connected components.** One innocuous-looking pair can
+weld two groups together and destroy a property the drill depends on. A real
+example: giving ཆེ་ཆུང་ (CHÉ CHUNG) the false friends ཆེན་ and ཆུ་ merged the
+`ཅན་/སྤྱན་/ཆེན་` group — all romanized CHEN, one of the eleven
+identical-romanization groups that `README_DATA.md` calls the most valuable cards
+— into the CHU group, flipping it out of that category entirely.
 
-More importantly, **false friends are edges in a graph, and the groups are its
-connected components.** One innocuous-looking pair can weld two groups together
-and silently destroy a property the drill depends on. A real example: giving
-ཆེ་ཆུང་ (CHÉ CHUNG) the false friends ཆེན་ and ཆུ་ merged the `ཅན་/སྤྱན་/ཆེན་`
-group — all romanized CHEN, one of the eleven identical-romanization groups that
-`README_DATA.md` calls the most valuable cards — into the CHU group. That flipped
-`romanizationsIdentical` to false and `hideRomanizationOnPrompt` to true, turning
-a prized card type into a seven-member muddle.
-
-If you believe a new word has a genuine false friend, **propose it to the user**
-rather than writing it. And after any run, diff the group structure:
+After any run, diff the group structure:
 
 ```bash
 python3 - <<'PY'
@@ -153,6 +150,46 @@ PY
 
 A **falling** group count means a merge. Adding entries should only ever raise it
 or leave it flat.
+
+### 4b. ONE review gate — show the entries and the false-friend candidates together
+
+Everything below is proposal. **Nothing is written until the user says go**, and
+they should only have to say it once.
+
+```bash
+python3 tools/suggest_false_friends.py --entries staged.json
+```
+
+Present in a single message:
+
+1. the new words — headword, romanization, gloss, and which existing rows will
+   gain a source (and which were skipped as already common)
+2. the false-friend candidates, each with its reason and its group impact
+3. anything you were unsure about — bad extraction, guessed romanization
+
+Then apply their answer by editing the staged JSON's `falseFriends` and go
+straight to step 5.
+
+**Do this here, not at the end.** A false friend on a *new* row is enough on its
+own — the group builder treats the relation as undirected, so no existing row
+needs editing. Approving before the write means one workbook version, one import,
+one verification. Approving afterwards means a second `edit_entries.py` cycle,
+a second workbook, and re-deriving context you already have. Same result, twice
+the work.
+
+Reading the candidate output:
+
+- `⚠ MERGES … DESTROYS an identical-romanization group` — recommend **against**
+  unless the user is sure. This is the failure described above.
+- `⚠ identical gloss` / `⚠ same leading sense` — the two words *mean* the same
+  thing, so the drill has no single right answer and filters the pair out again.
+  Not worth adding.
+- `joins an existing group (now N members)` — fine, but note N: past about six,
+  distractors get capped and the card dilutes.
+- `creates a new 2-member group` — the cleanest kind of addition.
+
+A false friend must **look alike but mean something different**. Candidates that
+fail the second half are noise however similar the script.
 
 ### 5. Build the new workbook
 
