@@ -651,6 +651,15 @@ html, body {
 
 .detail-section .english-reveal { margin-top: 8px; }
 
+/* Attribution under a context sentence: which text it was met in. Quiet enough
+   not to compete with the sentence itself. */
+.example-source {
+  margin-top: 8px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink-dim);
+}
+
 .chip-row {
   display: flex;
   flex-wrap: wrap;

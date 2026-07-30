@@ -8,6 +8,32 @@ function activeGroupMembers(group, data, activeSet) {
   return group.members.filter(id => activeSet.has(id));
 }
 
+// Two members that share an English gloss cannot both be offered, in EITHER
+// direction, because the card stops having one right answer:
+//   ti-en  the learner sees ཡིད་ and picks between two options both reading "mind"
+//   en-ti  the prompt "mind" matches ཡིད་ AND སེམས་, so both options are correct
+// Three groups are affected — ཡིད་/སེམས་ ("mind"), སོ་/ནོ་ ("terminating
+// particle"), ཐུགས་རྗེ་/སྙིང་རྗེ་ ("compassion"). Marking either choice wrong is a
+// bug in the card, not a mistake by the learner.
+function meaningKey(entry) {
+  return entry.english.trim().toLowerCase();
+}
+
+// The correct entry plus only those members that are actually tellable apart
+// from it, and from each other, by their English.
+function answerableMembers(members, correct) {
+  const seen = new Set([meaningKey(correct)]);
+  const out = [correct];
+  for (const m of members) {
+    if (m.id === correct.id) continue;
+    const key = meaningKey(m);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(m);
+  }
+  return out;
+}
+
 // Large groups (e.g. the 12-member "all"/plural-marker set) would turn the
 // drill into a lottery if every member were offered as an option, so cap it:
 // the correct entry plus up to MAX_OPTIONS-1 random distractors.
@@ -18,13 +44,22 @@ function pickOptionMembers(members, correctId) {
   return shuffle([correct, ...distractors]);
 }
 
+// An entry is only drillable if at least one group member survives the
+// answerable filter — otherwise every distractor would duplicate the answer.
+function drillableMembers(entry, data, activeSet) {
+  const group = data.groupsById.get(entry.falseFriendGroup);
+  if (!group) return [];
+  const members = activeGroupMembers(group, data, activeSet)
+    .map(id => data.entriesById.get(id));
+  return answerableMembers(members, entry);
+}
+
 function candidateIds(data, activeSet) {
   const out = [];
   for (const e of data.entries) {
     if (e.falseFriendGroup === null || e.falseFriendGroup === undefined) continue;
     if (!activeSet.has(e.id)) continue;
-    const group = data.groupsById.get(e.falseFriendGroup);
-    if (activeGroupMembers(group, data, activeSet).length >= 2) out.push(e.id);
+    if (drillableMembers(e, data, activeSet).length >= 2) out.push(e.id);
   }
   return out;
 }
@@ -50,7 +85,7 @@ export function createDiscriminationDrill(ctx) {
     lastEntryId = entryId;
     const entry = ctx.data.entriesById.get(entryId);
     const group = ctx.data.groupsById.get(entry.falseFriendGroup);
-    const members = activeGroupMembers(group, ctx.data, activeSet).map(id => ctx.data.entriesById.get(id));
+    const members = drillableMembers(entry, ctx.data, activeSet);
     const direction = Math.random() < 0.5 ? 'ti-en' : 'en-ti';
 
     renderCard(entry, group, members, direction);

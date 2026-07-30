@@ -66,6 +66,15 @@ Check every word against column B (exact Tibetan, including the trailing tsheg)
 of the current workbook before deciding. `add_entries.py` catches duplicates and
 converts them to appends, but it is a safety net, not a substitute for looking.
 
+**Common words do not collect sources.** A word already attested in **3 or more**
+sources is common enough that another citation says nothing, and column R would
+grow without end. `add_entries.py` skips the append for those automatically and
+lists them under "already common"; still send them as `append` items and let it
+decide. The threshold is `--common-threshold` (0 disables it).
+
+The point of column R is to show where the *rarer* vocabulary was met. ཆོས་ and
+དང་ turning up again is not information; ཐུན་མོང་ turning up in a second text is.
+
 ### 4. Write the entries file
 
 A JSON list in the scratchpad. Full schema in `tools/add_entries.py`'s docstring.

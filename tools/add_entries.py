@@ -286,6 +286,9 @@ def main():
                     help="compact label for the Look up scope chip, e.g. 'Guru Yoga'")
     ap.add_argument("--date-learned", default=None,
                     help="column U for new rows (default: today)")
+    ap.add_argument("--common-threshold", type=int, default=3,
+                    help="skip the source/lesson append for a word that already "
+                         "carries this many sources (default 3; 0 disables)")
     ap.add_argument("--workbook", default=None, help="default: newest in repo root")
     ap.add_argument("--out", default=None, help="default: today's dated filename in repo root")
     ap.add_argument("--dry-run", action="store_true")
@@ -311,7 +314,7 @@ def main():
     template_row = ws.max_row
     next_row = ws.max_row + 1
 
-    added, appended, skipped = [], [], []
+    added, appended, skipped, common = [], [], [], []
     for item in items:
         op = item.get("op", "new")
         tibetan = item.get("tibetan", "").strip()
@@ -327,6 +330,17 @@ def main():
             lesson = item.get("lesson", "").strip()
             if not source or not lesson:
                 sys.exit(f"append for {tibetan!r} needs a source and a lesson")
+
+            # A word already attested in several texts is common enough that one
+            # more citation tells the learner nothing, and column R would grow
+            # without bound. Record the sighting only while it is still
+            # informative. Words below the threshold still get the source, which
+            # is what makes the column useful for the rarer vocabulary.
+            existing = [s for s in str(ws.cell(row, col_index("R")).value or "").split(";")
+                        if s.strip()]
+            if args.common_threshold and len(existing) >= args.common_threshold:
+                common.append((tibetan, row, len(existing)))
+                continue
             changed_s = append_to_cell(ws, row, "R", source, SOURCE_SEP)
             changed_l = append_to_cell(ws, row, "S", lesson, LESSON_SEP)
             if changed_s or changed_l:
@@ -370,6 +384,11 @@ def main():
     print(f"sources appended: {len(appended)}")
     for tib, row, lesson in appended:
         print(f"    row {row}  {tib}  += {lesson!r}")
+    if common:
+        print(f"already common  : {len(common)} (>= {args.common_threshold} sources, "
+              "source/lesson not recorded)")
+        for tib, row, n in common:
+            print(f"    row {row}  {tib}  ({n} sources)")
     if skipped:
         print(f"!! {len(skipped)} entry marked 'new' already existed and was "
               "appended to instead (one row per word):")

@@ -164,6 +164,17 @@ export function createRecallDrill(ctx) {
           eng.textContent = entry.example.english;
           ex.appendChild(eng);
         }
+
+        // Which text the sentence comes from. The data does not record a source
+        // per example, so this is the entry's own source — the text it is
+        // numbered under, and the one its example was written from.
+        const sourceName = ctx.data.sourceNames[entry.sourceCode];
+        if (sourceName) {
+          const from = document.createElement('div');
+          from.className = 'example-source';
+          from.textContent = sourceName;
+          ex.appendChild(from);
+        }
         back.appendChild(ex);
       }
 

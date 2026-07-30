@@ -85,6 +85,23 @@ pair can merge two groups, removing one can split a group. A merge that collapse
 an identical-romanization group destroys the app's most valuable card type. After
 any change to that column, diff the group structure — both skills show how.
 
+**Common words stop collecting sources.** A word already in 3+ sources does not
+gain another when it turns up again (`--common-threshold`, default 3). Column R
+exists to show where the *rarer* vocabulary was met; ཆོས་ appearing in a sixth
+text is not information.
+
+### A card must have exactly one right answer
+
+`drills/discrimination.js` filters out group members that share an English gloss
+before building options. Without it, ཡིད་ and སེམས་ (both "mind") appear as two
+identical buttons and whichever the learner picks, one is marked wrong — a bug in
+the card, not a mistake by the learner. It bites in both directions: in `en-ti`
+the *prompt* "mind" matches two of the Tibetan options.
+
+Entries whose only group partners share their gloss drop out of the drill
+entirely. That is correct, but it means **an imprecise gloss silently costs you a
+card** — fix the gloss and the card comes back.
+
 ### Adding a source
 
 `tools/source_names.json` maps source code → `{name, short}`. `add_entries.py`
