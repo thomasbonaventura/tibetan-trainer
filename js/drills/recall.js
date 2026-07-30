@@ -1,38 +1,67 @@
 import { createSession, orderedCandidates, GRADUATED_BOX } from '../session.js';
 import { romanizationLine } from '../entry-view.js';
+import { createHistory, navRow } from './card-history.js';
 
 const DRILL_TYPE = 'recall';
 
 export function createRecallDrill(ctx) {
   const session = createSession(DRILL_TYPE);
+  const history = createHistory();
+  // The cohort ran out and the "nothing due" panel is showing. Tracked so that
+  // returning to the mode re-checks the queue instead of redrawing the last
+  // card the learner already graded.
+  let cohortDone = false;
 
   function candidates() {
     return orderedCandidates(ctx.data, ctx.getActiveSet());
   }
 
+  // Redraw rather than advance. session.next() moves the relearning queue on,
+  // so calling it from render() would quietly reshuffle the session every time
+  // the learner switched tabs.
   function render() {
-    const activeSet = ctx.getActiveSet();
-    const all = orderedCandidates(ctx.data, activeSet);
+    const all = orderedCandidates(ctx.data, ctx.getActiveSet());
 
     if (all.length === 0) {
+      history.clear();
       ctx.container.innerHTML = '<div class="empty-state">No entries available with the current filters.</div>';
       ctx.setDueCount(0);
       return;
     }
 
-    const cohortSize = ctx.settings.recallCohortSize;
-    const pick = session.next(ctx.data, activeSet, ctx.store, cohortSize);
+    const state = cohortDone ? null : history.viewing();
+    if (state && ctx.data.entriesById.has(state.entryId)) {
+      renderCard(ctx.data.entriesById.get(state.entryId), state);
+      return;
+    }
+    next();
+  }
 
+  function next() {
+    const activeSet = ctx.getActiveSet();
+    const all = orderedCandidates(ctx.data, activeSet);
+    if (all.length === 0) { render(); return; }
+
+    const pick = session.next(ctx.data, activeSet, ctx.store, ctx.settings.recallCohortSize);
     ctx.setDueCount(pick.due.length + session.relearnCount());
 
     if (pick.id === null) {
+      cohortDone = true;
       renderCohortDone(pick, all.length);
       return;
     }
+    cohortDone = false;
 
-    const entry = ctx.data.entriesById.get(pick.id);
-    const direction = Math.random() < 0.5 ? 'ti-en' : 'en-ti';
-    renderCard(entry, direction, pick);
+    history.push({
+      entryId: pick.id,
+      direction: Math.random() < 0.5 ? 'ti-en' : 'en-ti',
+      revealed: false,
+      answered: false,
+      relearn: pick.reason === 'relearn',
+      learned: pick.learned.length,
+      cohort: pick.cohort.length,
+    });
+    renderCard(ctx.data.entriesById.get(pick.id), history.viewing());
   }
 
   // Nothing in the cohort is due: everything has been pushed out to a future
@@ -67,7 +96,7 @@ export function createRecallDrill(ctx) {
       add.addEventListener('click', () => {
         ctx.settings.recallCohortSize = pick.cohort.length + step;
         ctx.persistSettings();
-        render();
+        next();
       });
       container.appendChild(add);
 
@@ -84,14 +113,15 @@ export function createRecallDrill(ctx) {
     }
   }
 
-  function renderCard(entry, direction, pick) {
+  function renderCard(entry, state) {
     const container = ctx.container;
     container.innerHTML = '';
+    const direction = state.direction;
 
     const card = document.createElement('div');
     card.className = 'card flip-card';
 
-    if (pick.reason === 'relearn') {
+    if (state.relearn) {
       const again = document.createElement('div');
       again.className = 'again-flag';
       again.textContent = 'again';
@@ -111,7 +141,7 @@ export function createRecallDrill(ctx) {
 
     const progress = document.createElement('div');
     progress.className = 'cohort-progress';
-    progress.textContent = `${pick.learned.length}/${pick.cohort.length} learned in rotation`;
+    progress.textContent = `${state.learned}/${state.cohort} learned in rotation`;
     container.appendChild(progress);
 
     let revealed = false;
@@ -122,9 +152,16 @@ export function createRecallDrill(ctx) {
     revealBtn.style.marginTop = '16px';
     container.appendChild(revealBtn);
 
-    revealBtn.addEventListener('click', () => {
+    if (!state.revealed) {
+      const nav = navRow(history, () => renderCard(
+        ctx.data.entriesById.get(history.viewing().entryId), history.viewing()));
+      if (nav) container.appendChild(nav);
+    }
+
+    function doReveal() {
       if (revealed) return;
       revealed = true;
+      history.update({ revealed: true });
 
       const back = document.createElement('div');
       back.className = 'flip-back';
@@ -190,25 +227,49 @@ export function createRecallDrill(ctx) {
       card.appendChild(back);
       revealBtn.remove();
 
-      const row = document.createElement('div');
-      row.className = 'action-row';
-      const bad = document.createElement('button');
-      bad.className = 'big-btn bad';
-      bad.textContent = '✗ Didn’t know';
-      const good = document.createElement('button');
-      good.className = 'big-btn good';
-      good.textContent = '✓ Knew it';
-      bad.addEventListener('click', () => {
-        session.answer(entry.id, false, ctx.store, pick.cohort.length);
-        render();
-      });
-      good.addEventListener('click', () => {
-        session.answer(entry.id, true, ctx.store, pick.cohort.length);
-        render();
-      });
-      row.append(bad, good);
-      container.appendChild(row);
-    });
+      const redraw = () => renderCard(
+        ctx.data.entriesById.get(history.viewing().entryId), history.viewing());
+
+      // An already-graded card — one being looked at again — shows its solution
+      // and nothing to grade. Re-answering it would score the same word twice.
+      if (state.answered) {
+        const row = document.createElement('div');
+        row.className = 'action-row';
+        const fwd = document.createElement('button');
+        fwd.className = 'big-btn primary';
+        fwd.textContent = history.atLive() ? 'Next' : 'Next →';
+        fwd.addEventListener('click', () => {
+          if (history.atLive()) next();
+          else { history.forward(); redraw(); }
+        });
+        row.appendChild(fwd);
+        container.appendChild(row);
+      } else {
+        const row = document.createElement('div');
+        row.className = 'action-row';
+        const bad = document.createElement('button');
+        bad.className = 'big-btn bad';
+        bad.textContent = '✗ Didn’t know';
+        const good = document.createElement('button');
+        good.className = 'big-btn good';
+        good.textContent = '✓ Knew it';
+        const grade = (knewIt) => {
+          history.update({ answered: true });
+          session.answer(entry.id, knewIt, ctx.store, state.cohort);
+          next();
+        };
+        bad.addEventListener('click', () => grade(false));
+        good.addEventListener('click', () => grade(true));
+        row.append(bad, good);
+        container.appendChild(row);
+      }
+
+      const nav = navRow(history, redraw);
+      if (nav) container.appendChild(nav);
+    }
+
+    revealBtn.addEventListener('click', doReveal);
+    if (state.revealed) doReveal();
   }
 
   return { render, candidates };

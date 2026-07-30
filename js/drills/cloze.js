@@ -1,4 +1,5 @@
 import { shuffle, pickNext, dueCount } from '../queue.js';
+import { createHistory, navRow } from './card-history.js';
 
 const DRILL_TYPE = 'cloze';
 
@@ -30,31 +31,60 @@ function pickDistractors(data, correctAnswer, count) {
 export function createClozeDrill(ctx) {
   let lastEntryId = null;
   let typeMode = false; // false = multiple choice, true = type it
+  const history = createHistory();
 
   function candidates() {
     return candidateEntryIds(ctx.data, ctx.getActiveSet());
   }
 
+  // Redraws the card that was on screen; only advances when there is none.
   function render() {
-    const activeSet = ctx.getActiveSet();
-    const cands = candidateEntryIds(ctx.data, activeSet);
+    const cands = candidateEntryIds(ctx.data, ctx.getActiveSet());
     ctx.setDueCount(dueCount(cands, ctx.store, DRILL_TYPE));
 
     if (cands.length === 0) {
+      history.clear();
       ctx.container.innerHTML = '<div class="empty-state">No cloze cards available with the current filters.</div>';
       return;
     }
+
+    const state = history.viewing();
+    if (state && ctx.data.entriesById.has(state.entryId)) {
+      drawCard(state);
+      return;
+    }
+    next();
+  }
+
+  function next() {
+    const cands = candidateEntryIds(ctx.data, ctx.getActiveSet());
+    if (cands.length === 0) { render(); return; }
 
     const entryId = pickNext(cands, ctx.store, DRILL_TYPE, lastEntryId);
     lastEntryId = entryId;
     const cards = ctx.data.clozeByEntryId.get(entryId);
     const card = cards[Math.floor(Math.random() * cards.length)];
-    const entry = ctx.data.entriesById.get(entryId);
 
-    renderCard(entry, card);
+    // Which sentence, and which distractors in which order, are fixed now so
+    // the card redraws identically.
+    history.push({
+      entryId,
+      cardId: card.cardId,
+      options: shuffle([card.blank.answer, ...pickDistractors(ctx.data, card.blank.answer, 3)]),
+      answer: null, // { correct, given } once answered
+    });
+    drawCard(history.viewing());
   }
 
-  function renderCard(entry, card) {
+  function drawCard(state) {
+    const entry = ctx.data.entriesById.get(state.entryId);
+    const cards = ctx.data.clozeByEntryId.get(state.entryId) || [];
+    const card = cards.find(c => c.cardId === state.cardId) || cards[0];
+    if (!card) { next(); return; }
+    renderCard(entry, card, state);
+  }
+
+  function renderCard(entry, card, state) {
     const container = ctx.container;
     container.innerHTML = '';
 
@@ -89,10 +119,15 @@ export function createClozeDrill(ctx) {
 
     let answered = false;
 
-    function reveal(wasCorrect, givenText) {
+    // `score` is false when redrawing an answer the learner already gave, so
+    // leaving the mode and coming back cannot inflate the Leitner counts.
+    function reveal(wasCorrect, givenText, score = true) {
       if (answered) return;
       answered = true;
-      ctx.store.answer(entry.id, DRILL_TYPE, wasCorrect);
+      if (score) {
+        ctx.store.answer(entry.id, DRILL_TYPE, wasCorrect);
+        history.update({ answer: { correct: wasCorrect, given: givenText ?? null } });
+      }
       blankSpan.textContent = answer;
       blankSpan.classList.add('filled');
 
@@ -146,12 +181,15 @@ export function createClozeDrill(ctx) {
     } else {
       const optionsEl = document.createElement('div');
       optionsEl.className = 'options';
-      const distractors = pickDistractors(ctx.data, answer, 3);
-      const options = shuffle([answer, ...distractors]);
-      for (const opt of options) {
+      for (const opt of state.options) {
         const btn = document.createElement('button');
         btn.className = 'option-btn tibetan';
         btn.textContent = opt;
+        if (state.answer) {
+          btn.disabled = true;
+          if (opt === answer) btn.classList.add('correct');
+          if (opt === state.answer.given && !state.answer.correct) btn.classList.add('incorrect');
+        }
         btn.addEventListener('click', () => {
           if (answered) return;
           const correct = opt === answer;
@@ -167,15 +205,28 @@ export function createClozeDrill(ctx) {
       container.appendChild(optionsEl);
     }
 
+    if (state.answer) {
+      reveal(state.answer.correct, state.answer.given ?? undefined, false);
+    } else {
+      const nav = navRow(history, () => drawCard(history.viewing()));
+      if (nav) container.appendChild(nav);
+    }
+
     function renderFooter() {
       const toggleRow = document.createElement('div');
       toggleRow.className = 'action-row';
-      const next = document.createElement('button');
-      next.className = 'big-btn primary';
-      next.textContent = 'Next';
-      next.addEventListener('click', render);
-      toggleRow.appendChild(next);
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'big-btn primary';
+      nextBtn.textContent = history.atLive() ? 'Next' : 'Next →';
+      nextBtn.addEventListener('click', () => {
+        if (history.atLive()) next();
+        else { history.forward(); drawCard(history.viewing()); }
+      });
+      toggleRow.appendChild(nextBtn);
       container.appendChild(toggleRow);
+
+      const nav = navRow(history, () => drawCard(history.viewing()));
+      if (nav) container.appendChild(nav);
     }
   }
 

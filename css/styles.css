@@ -651,6 +651,46 @@ html, body {
 
 .detail-section .english-reveal { margin-top: 8px; }
 
+/* Step back to a card you have already answered. Deliberately quieter than the
+   primary action so it never competes with Next. */
+.card-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 14px;
+  /* Last thing in the scroll area, so it needs its own clearance or the tab bar
+     crops it on a short screen. */
+  padding-bottom: 8px;
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--ink-dim);
+  font-size: 14px;
+  padding: 7px 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.nav-btn:not(:disabled):active {
+  background: var(--card);
+  color: var(--ink);
+}
+
+.nav-label {
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: 0.02em;
+}
+
 /* Attribution under a context sentence: which text it was met in. Quiet enough
    not to compete with the sentence itself. */
 .example-source {

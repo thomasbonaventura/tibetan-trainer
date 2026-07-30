@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'tibtrainer-shell-v9';
+const SHELL_CACHE = 'tibtrainer-shell-v10';
 const DATA_CACHE = 'tibtrainer-data-v1';
 
 const SHELL_FILES = [
@@ -14,6 +14,7 @@ const SHELL_FILES = [
   './js/search.js',
   './js/entry-view.js',
   './js/lookup.js',
+  './js/drills/card-history.js',
   './js/drills/discrimination.js',
   './js/drills/cloze.js',
   './js/drills/recall.js',

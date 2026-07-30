@@ -1,5 +1,6 @@
 import { shuffle, pickNext, dueCount } from '../queue.js';
 import { romanizationLine } from '../entry-view.js';
+import { createHistory, navRow } from './card-history.js';
 
 const DRILL_TYPE = 'discrimination';
 const MAX_OPTIONS = 4;
@@ -66,32 +67,63 @@ function candidateIds(data, activeSet) {
 
 export function createDiscriminationDrill(ctx) {
   let lastEntryId = null;
+  const history = createHistory();
 
   function candidates() {
     return candidateIds(ctx.data, ctx.getActiveSet());
   }
 
+  // Called on every mode switch. Redraws whatever was on screen rather than
+  // moving on, so looking a word up and coming back does not lose the card.
   function render() {
-    const activeSet = ctx.getActiveSet();
-    const cands = candidateIds(ctx.data, activeSet);
+    const cands = candidateIds(ctx.data, ctx.getActiveSet());
     ctx.setDueCount(dueCount(cands, ctx.store, DRILL_TYPE));
 
     if (cands.length === 0) {
+      history.clear();
       ctx.container.innerHTML = '<div class="empty-state">No false-friend groups available with the current filters. Try including more sources, or turn off &ldquo;exclude unverified&rdquo; in Filters.</div>';
       return;
     }
 
+    const card = history.viewing();
+    if (card && ctx.data.entriesById.has(card.entryId)) {
+      drawCard(card);
+      return;
+    }
+    next();
+  }
+
+  function next() {
+    const activeSet = ctx.getActiveSet();
+    const cands = candidateIds(ctx.data, activeSet);
+    if (cands.length === 0) { render(); return; }
+
     const entryId = pickNext(cands, ctx.store, DRILL_TYPE, lastEntryId);
     lastEntryId = entryId;
     const entry = ctx.data.entriesById.get(entryId);
-    const group = ctx.data.groupsById.get(entry.falseFriendGroup);
     const members = drillableMembers(entry, ctx.data, activeSet);
-    const direction = Math.random() < 0.5 ? 'ti-en' : 'en-ti';
 
-    renderCard(entry, group, members, direction);
+    // The option order is frozen into the card, so stepping back redraws the
+    // same buttons in the same places instead of reshuffling them.
+    history.push({
+      entryId,
+      direction: Math.random() < 0.5 ? 'ti-en' : 'en-ti',
+      optionIds: pickOptionMembers(members, entryId).map(m => m.id),
+      answeredId: null,
+    });
+    drawCard(history.viewing());
   }
 
-  function renderCard(entry, group, members, direction) {
+  function drawCard(state) {
+    const entry = ctx.data.entriesById.get(state.entryId);
+    const group = ctx.data.groupsById.get(entry.falseFriendGroup);
+    const members = state.optionIds
+      .map(id => ctx.data.entriesById.get(id))
+      .filter(Boolean);
+    renderCard(entry, group, members, state.direction, state);
+  }
+
+  function renderCard(entry, group, members, direction, state) {
     const container = ctx.container;
     container.innerHTML = '';
 
@@ -126,23 +158,34 @@ export function createDiscriminationDrill(ctx) {
     const optionsEl = document.createElement('div');
     optionsEl.className = 'options';
 
-    const options = pickOptionMembers(members, entry.id).map(m => ({
+    const options = members.map(m => ({
       entry: m,
       label: direction === 'ti-en' ? m.english : m.tibetan,
       correct: m.id === entry.id,
     }));
 
-    let answered = false;
+    // Already answered — either earlier in this session, or before the learner
+    // switched away and came back. Redraw the outcome; never score it twice.
+    const alreadyAnswered = state.answeredId !== null;
+    let answered = alreadyAnswered;
 
     for (const opt of options) {
       const btn = document.createElement('button');
       btn.className = 'option-btn' + (direction === 'en-ti' ? ' tibetan' : '');
       btn.textContent = opt.label;
       opt.btn = btn;
+
+      if (alreadyAnswered) {
+        btn.disabled = true;
+        if (opt.correct) btn.classList.add('correct');
+        if (opt.entry.id === state.answeredId && !opt.correct) btn.classList.add('incorrect');
+      }
+
       btn.addEventListener('click', () => {
         if (answered) return;
         answered = true;
         ctx.store.answer(entry.id, DRILL_TYPE, opt.correct);
+        history.update({ answeredId: opt.entry.id });
         for (const child of optionsEl.children) child.disabled = true;
         btn.classList.add(opt.correct ? 'correct' : 'incorrect');
         if (!opt.correct) {
@@ -155,6 +198,14 @@ export function createDiscriminationDrill(ctx) {
     }
 
     container.appendChild(optionsEl);
+    if (alreadyAnswered) {
+      showFooter();
+    } else {
+      // Reachable before answering too, so you can step back without being
+      // forced to guess at the card in front of you first.
+      const nav = navRow(history, () => drawCard(history.viewing()));
+      if (nav) container.appendChild(nav);
+    }
 
     function showFooter() {
       if (!romanizationShownInPrompt) card.appendChild(romanizationLine(entry));
@@ -178,12 +229,21 @@ export function createDiscriminationDrill(ctx) {
       // honoured via group.hideRomanizationOnPrompt above.
       const row = document.createElement('div');
       row.className = 'action-row';
-      const next = document.createElement('button');
-      next.className = 'big-btn primary';
-      next.textContent = 'Next';
-      next.addEventListener('click', render);
-      row.appendChild(next);
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'big-btn primary';
+      // While reviewing an older card, "Next" walks forward through history
+      // rather than dealing a new word — otherwise the cards you stepped back
+      // past would be unreachable again.
+      nextBtn.textContent = history.atLive() ? 'Next' : 'Next →';
+      nextBtn.addEventListener('click', () => {
+        if (history.atLive()) next();
+        else { history.forward(); drawCard(history.viewing()); }
+      });
+      row.appendChild(nextBtn);
       container.appendChild(row);
+
+      const nav = navRow(history, () => drawCard(history.viewing()));
+      if (nav) container.appendChild(nav);
     }
   }
 
