@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'tibtrainer-shell-v11';
+const SHELL_CACHE = 'tibtrainer-shell-v13';
 const DATA_CACHE = 'tibtrainer-data-v1';
 
 const SHELL_FILES = [

@@ -1,0 +1,12 @@
+{
+  "_comment": "Credits shown in the app's About panel. Edit this file and re-run tools/import_dictionary.py — the importer copies it into meta.attribution, so the app still reads only tibetan_trainer_data.json. Add an entry to `sources` whenever a new publication is drawn on; /updatedata prompts for this. Keep the tone as attribution, not licensing: state where the material came from and what is the compiler's own work.",
+  "compiledBy": "Vocabulary compiled by Thomas Hesse for personal study, and shared with a small group of fellow Tibetan students. Drawn, with gratitude, from:",
+  "sources": [
+    "Joseph Faria, who taught the Tergar Institute Tibetan I and Tibetan II classes, and whose study materials on grammar and on Nectar of the Path this draws on",
+    "Nectar of the Path, by Yongey Mingyur Rinpoche, translated by Cortland Dahl (Tergar)",
+    "Tergar Daily Chants, translated by Cortland Dahl",
+    "The Karma Kagyü Preliminary Practices: The Chariot for Traveling the Noble Path, by the Ninth Karmapa, Wangchuk Dorje, translated by Cortland Dahl"
+  ],
+  "notice": "The English given for the ngöndro and chant lines is my own literal, line-for-line rendering, made for construing the grammar — not the published translation. This is a drill aid and no substitute for the publications themselves, which remain the work of their authors, translators and publishers.",
+  "corrections": "Errors are my own, and there are certainly some. Please let me know what you find and I'll correct them."
+}

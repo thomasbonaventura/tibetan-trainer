@@ -116,6 +116,11 @@ registers new codes automatically. Nothing in Python or JS needs editing when a
 source is added — if you find yourself hardcoding a source code anywhere, that
 is a bug.
 
+`tools/attribution.json` holds the credits and licence notice shown in the app's
+**About** panel (bottom of the Settings sheet). The importer copies it into
+`meta.attribution`, so the app still reads only one file. A new *publication*
+needs a line here; ask the user for the wording rather than composing a credit.
+
 ---
 
 ## App architecture

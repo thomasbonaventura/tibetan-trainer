@@ -54,6 +54,11 @@ Look at `tools/source_names.json` and the workbook's **About** sheet.
   Ngöndro series, a Daily Chants prayer gets its own short code like `MAN` or
   `SDED`. Confirm the code and the display name with the user before writing.
 
+A genuinely new *publication* (not just another chapter of one already credited)
+also needs a line in `tools/attribution.json`, which feeds the app's About panel.
+Ask the user for the wording — author, translator, publisher — and whether the
+licence notice needs updating. Do not invent a credit line.
+
 Ask the user for the **date learned** if it is not obvious. Do not invent one.
 
 ### 3. Decide new row vs. append — this is the rule that matters

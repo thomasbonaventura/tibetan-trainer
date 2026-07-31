@@ -217,6 +217,56 @@ async function main() {
     }
     filterBody.appendChild(g3);
 
+    // About — credits and licence. Content lives in meta.attribution, which the
+    // importer copies from tools/attribution.json, so adding a source is a data
+    // edit rather than a code change.
+    const about = data.meta.attribution;
+    if (about) {
+      const g4 = document.createElement('div');
+      g4.className = 'filter-group';
+      g4.innerHTML = '<h3>About</h3>';
+
+      const wrap = document.createElement('div');
+      wrap.className = 'about-block';
+
+      if (about.compiledBy) {
+        const lead = document.createElement('p');
+        lead.className = 'about-lead';
+        lead.textContent = about.compiledBy;
+        wrap.appendChild(lead);
+      }
+
+      if (about.sources && about.sources.length) {
+        const ol = document.createElement('ol');
+        ol.className = 'about-sources';
+        for (const s of about.sources) {
+          const li = document.createElement('li');
+          li.textContent = s;
+          ol.appendChild(li);
+        }
+        wrap.appendChild(ol);
+      }
+
+      if (about.notice) {
+        const notice = document.createElement('p');
+        notice.className = 'about-notice';
+        notice.textContent = about.notice;
+        wrap.appendChild(notice);
+      }
+
+      // An invitation rather than a disclaimer, so it reads a shade warmer than
+      // the notice above it.
+      if (about.corrections) {
+        const corrections = document.createElement('p');
+        corrections.className = 'about-corrections';
+        corrections.textContent = about.corrections;
+        wrap.appendChild(corrections);
+      }
+
+      g4.appendChild(wrap);
+      filterBody.appendChild(g4);
+    }
+
     const reset = document.createElement('button');
     reset.className = 'reset-link';
     reset.textContent = 'Reset filters';

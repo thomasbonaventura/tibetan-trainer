@@ -69,10 +69,23 @@ SHEET = "Dictionary"
 # the UI.
 SOURCE_NAMES_FILE = pathlib.Path(__file__).resolve().parent / "source_names.json"
 
+# Credits and licence notice for the app's About panel. Kept in its own file so
+# it can be edited without touching code, and copied into meta so the app still
+# reads only tibetan_trainer_data.json.
+ATTRIBUTION_FILE = pathlib.Path(__file__).resolve().parent / "attribution.json"
+
 
 def load_source_names():
     with SOURCE_NAMES_FILE.open(encoding="utf-8") as fh:
         return json.load(fh)["sources"]
+
+
+def load_attribution():
+    if not ATTRIBUTION_FILE.exists():
+        return None
+    with ATTRIBUTION_FILE.open(encoding="utf-8") as fh:
+        doc = json.load(fh)
+    return {k: v for k, v in doc.items() if not k.startswith("_")}
 
 # Editorial guidance carried in meta for the app's benefit. Not spreadsheet
 # content; the romanization convention restates the About sheet's note.
@@ -444,6 +457,7 @@ def build_meta(entries, about, workbook_name):
         "romanizationConvention": META_PROSE["romanizationConvention"],
         "idIsStable": META_PROSE["idIsStable"],
         "cardGuidance": META_PROSE["cardGuidance"],
+        "attribution": load_attribution(),
         "sources": sources,
     }
 
