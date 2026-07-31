@@ -1,5 +1,5 @@
 import { shuffle, pickNext, dueCount } from '../queue.js';
-import { romanizationLine } from '../entry-view.js';
+import { romanizationLine, renderEntryDetail } from '../entry-view.js';
 import { createHistory, navRow } from './card-history.js';
 
 const DRILL_TYPE = 'discrimination';
@@ -110,6 +110,7 @@ export function createDiscriminationDrill(ctx) {
       direction: Math.random() < 0.5 ? 'ti-en' : 'en-ti',
       optionIds: pickOptionMembers(members, entryId).map(m => m.id),
       answeredId: null,
+      expandedId: null, // which option's dictionary entry is open, once answered
     });
     drawCard(history.viewing());
   }
@@ -169,37 +170,89 @@ export function createDiscriminationDrill(ctx) {
     const alreadyAnswered = state.answeredId !== null;
     let answered = alreadyAnswered;
 
+    // Once the card is answered the options stop being answer buttons and become
+    // handles for looking each word up. They are marked with a class rather than
+    // the `disabled` attribute, because a disabled button fires no click events
+    // and could not be expanded.
+    function lockOptions() {
+      for (const o of options) {
+        o.btn.classList.add('answered');
+        o.btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    // The full dictionary entry, inline under its option. Chips inside it are
+    // deliberately not navigable — following one mid-drill would lose the card.
+    function toggleDetail(opt) {
+      if (opt.detailEl) {
+        opt.detailEl.remove();
+        opt.detailEl = null;
+        opt.btn.setAttribute('aria-expanded', 'false');
+        history.update({ expandedId: null });
+        return;
+      }
+      // One at a time, or the card grows past a phone screen.
+      for (const other of options) {
+        if (other.detailEl) {
+          other.detailEl.remove();
+          other.detailEl = null;
+          other.btn.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      const panel = document.createElement('div');
+      panel.className = 'option-detail';
+      panel.appendChild(renderEntryDetail(opt.entry, ctx.data, {}));
+
+      const closeRow = document.createElement('div');
+      closeRow.className = 'card-nav';
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'nav-btn';
+      close.textContent = 'Close';
+      close.addEventListener('click', () => toggleDetail(opt));
+      closeRow.appendChild(close);
+      panel.appendChild(closeRow);
+
+      opt.btn.after(panel);
+      opt.detailEl = panel;
+      opt.btn.setAttribute('aria-expanded', 'true');
+      history.update({ expandedId: opt.entry.id });
+    }
+
     for (const opt of options) {
       const btn = document.createElement('button');
       btn.className = 'option-btn' + (direction === 'en-ti' ? ' tibetan' : '');
       btn.textContent = opt.label;
       opt.btn = btn;
+      opt.detailEl = null;
 
       if (alreadyAnswered) {
-        btn.disabled = true;
         if (opt.correct) btn.classList.add('correct');
         if (opt.entry.id === state.answeredId && !opt.correct) btn.classList.add('incorrect');
       }
 
       btn.addEventListener('click', () => {
-        if (answered) return;
+        if (answered) { toggleDetail(opt); return; }
         answered = true;
         ctx.store.answer(entry.id, DRILL_TYPE, opt.correct);
         history.update({ answeredId: opt.entry.id });
-        for (const child of optionsEl.children) child.disabled = true;
+        lockOptions();
         btn.classList.add(opt.correct ? 'correct' : 'incorrect');
-        if (!opt.correct) {
-          const correctBtn = [...optionsEl.children][options.indexOf(options.find(o => o.correct))];
-          correctBtn.classList.add('correct');
-        }
+        if (!opt.correct) options.find(o => o.correct).btn.classList.add('correct');
         showFooter();
       });
       optionsEl.appendChild(btn);
     }
 
+    if (alreadyAnswered) lockOptions();
+
     container.appendChild(optionsEl);
     if (alreadyAnswered) {
       showFooter();
+      // Reopen whatever entry was expanded before the learner switched modes.
+      const reopen = options.find(o => o.entry.id === state.expandedId);
+      if (reopen) toggleDetail(reopen);
     } else {
       // Reachable before answering too, so you can step back without being
       // forced to guess at the card in front of you first.
@@ -223,6 +276,12 @@ export function createDiscriminationDrill(ctx) {
           opt.btn.appendChild(rom);
         }
       }
+      // The options are now lookup handles, which is not discoverable on its own.
+      const hint = document.createElement('div');
+      hint.className = 'option-hint';
+      hint.textContent = 'Tap any word above for its dictionary entry';
+      container.insertBefore(hint, optionsEl.nextSibling);
+
       // group.note is authoring guidance addressed to whoever builds the app
       // ("Do NOT show the pronunciation on the QUESTION side…"), not something
       // a learner should ever read. The instruction it carries is already

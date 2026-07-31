@@ -197,8 +197,35 @@ html, body {
   border-color: var(--bad);
   background: rgba(224, 102, 90, 0.18);
 }
-.option-btn[disabled] { opacity: 0.6; }
-.option-btn.correct[disabled], .option-btn.incorrect[disabled] { opacity: 1; }
+/* `disabled` is how the cloze drill retires its options. Discriminate uses
+   `.answered` instead, because after answering its options stay tappable — they
+   become handles for looking each word up, and a disabled button fires no
+   clicks. Both must look the same. */
+.option-btn[disabled], .option-btn.answered { opacity: 0.6; }
+.option-btn.correct[disabled], .option-btn.incorrect[disabled],
+.option-btn.correct.answered, .option-btn.incorrect.answered { opacity: 1; }
+
+.option-btn.answered { cursor: pointer; }
+.option-btn.answered[aria-expanded="true"] {
+  border-color: var(--accent, #e6b450);
+}
+
+/* The expanded dictionary entry, inline beneath its option. */
+.option-detail {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px 6px;
+  text-align: left;
+  margin-top: -2px;
+}
+
+.option-hint {
+  font-size: 12px;
+  color: var(--ink-dim);
+  text-align: center;
+  margin-top: 10px;
+}
 
 /* ---------- Cloze sentence ---------- */
 .cloze-sentence {
